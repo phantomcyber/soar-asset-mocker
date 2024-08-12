@@ -42,6 +42,7 @@ def test_redact_skip_string():
             '{"password":"abcd"}'.encode(),
             f'{{"password": "{REDACTED}"}}'.encode(),
         ),
+        ("{ab{", "{ab{"),
         (b"0\xbe", b"0\xbe"),
     ],
 )
