@@ -4,7 +4,7 @@ from soar_asset_mocker.base.consts import MockType
 from soar_asset_mocker.connector.action_context import ActionContext
 from soar_asset_mocker.connector.asset_config import AssetConfig
 from soar_asset_mocker.mocker.mocker_orchestrator import MockOrchestrator
-from soar_asset_mocker.recorder.recorder_orchestrator import RecordOrchestrator
+from soar_asset_mocker.mocker.recorder_orchestrator import RecordOrchestrator
 
 
 class AssetMocker:

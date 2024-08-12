@@ -16,3 +16,7 @@ class Mocker(ABC):
     @contextmanager
     def mock(self, register: MocksRegister, action: ActionContext):
         raise NotImplementedError
+
+    @contextmanager
+    def record(self, register: MocksRegister, action: ActionContext):
+        raise NotImplementedError
