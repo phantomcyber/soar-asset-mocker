@@ -10,15 +10,15 @@ FIELDS_TO_REDACT = [
     "token",
     "authorization",
     "bearer",
-    "key",
     "secret",
+    "key",
 ]
 
 REDACTED = "*****"
 
 
 def redact_string(key: str, value):
-    if any(field in key.lower() for field in FIELDS_TO_REDACT):
+    if any(field.lower() in key.lower() for field in FIELDS_TO_REDACT):
         return REDACTED
     return value
 

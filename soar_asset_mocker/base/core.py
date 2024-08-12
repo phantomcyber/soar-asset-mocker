@@ -18,7 +18,7 @@ class AssetMocker:
         return config
 
     @contextmanager
-    def mock_context(self, app, config: AssetConfig, action: ActionContext):
+    def _mock_context(self, app, config: AssetConfig, action: ActionContext):
         if not config.is_mocking:
             yield
             return
@@ -27,7 +27,7 @@ class AssetMocker:
             yield
 
     @contextmanager
-    def record_context(self, app, config: AssetConfig, action: ActionContext):
+    def _record_context(self, app, config: AssetConfig, action: ActionContext):
         if not config.is_recording:
             yield
             return
@@ -35,12 +35,12 @@ class AssetMocker:
         with RecordOrchestrator.record(app, config, action):
             yield
 
-    def wrap_core(self, handle):
+    def _wrap_core(self, handle):
         def wrapper(app, param):
             config = self._get_asset_config(app)
             action = ActionContext.from_action_run(app, param)
-            with self.mock_context(app, config, action):
-                with self.record_context(app, config, action):
+            with self._mock_context(app, config, action):
+                with self._record_context(app, config, action):
                     out = handle(app, param)
             if config.active:
                 results = app.get_action_results()
@@ -51,4 +51,4 @@ class AssetMocker:
 
     @classmethod
     def wrap(cls, *mock_types: MockType):
-        return cls(mock_types).wrap_core
+        return cls(mock_types)._wrap_core

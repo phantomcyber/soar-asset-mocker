@@ -5,10 +5,7 @@ import pytest
 from soar_asset_mocker import consts
 from soar_asset_mocker.base.register import MocksRegister
 from soar_asset_mocker.connector import ActionContext, AssetConfig
-
-from tests.fixtures.mock_phantom import (  # isort: skip  # Adds missing phantom libs to package scope
-    phantom_module,
-)
+from tests.fixtures.mock_phantom import phantom_module
 
 
 def _get_test_register():

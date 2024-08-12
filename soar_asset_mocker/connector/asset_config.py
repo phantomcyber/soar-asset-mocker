@@ -13,11 +13,11 @@ class AssetConfig:
 
     @property
     def description(self):
+        types_str = ",".join([t.value for t in self.mock_types])
         if self.is_recording:
-            return f"Recording to container {self.container_id}"
+            return f"Recording to container {self.container_id}, used mockers: {types_str}"
         if self.is_mocking:
-            types_str = ",".join([t.value for t in self.mock_types])
-            return f"Mocking using: {types_str}"
+            return f"Mocking, used mockers: {types_str}"
 
     @property
     def summary(self):
