@@ -25,7 +25,7 @@ class RegisterPersister:
         raise CassetteNotFoundError()
 
     def save_cassette(self, cassette_path, cassette_dict, serializer):
-        return
+        raise NotImplementedError()
 
 
 class RegisterWritePersister(RegisterPersister):
@@ -41,12 +41,12 @@ class RegisterWritePersister(RegisterPersister):
 class RegisterReadPersister(RegisterPersister):
 
     def load_cassette(self, mock_type: str, serializer):
-        try:
-            return deserialize(
-                self.register.get_mock_recordings(
-                    MockType(mock_type), self.action
-                ),
-                Serializer,
-            )
-        except KeyError:
-            raise CassetteNotFoundError()
+        recordings = self.register.get_mock_recordings(
+            MockType(mock_type), self.action
+        )
+        if len(recordings) == 0:
+            raise CassetteNotFoundError
+        return deserialize(
+            recordings,
+            Serializer,
+        )

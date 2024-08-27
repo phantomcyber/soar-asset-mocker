@@ -17,7 +17,7 @@ class RecordOrchestrator:
                 cls._MAPPING[mock_type]() for mock_type in config.mock_types
             ]
         except KeyError:
-            raise Exception(
+            raise KeyError(
                 f"Unsupported mock types provided {config.mock_types}"
             )
 

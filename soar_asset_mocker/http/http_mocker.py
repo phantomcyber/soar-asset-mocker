@@ -1,8 +1,10 @@
 from contextlib import contextmanager
 
 from vcr import VCR
+from vcr.errors import CannotOverwriteExistingCassetteException
 
 from soar_asset_mocker.base.consts import MockType
+from soar_asset_mocker.base.exceptions import MissingRecordingException
 from soar_asset_mocker.base.register import MocksRegister
 from soar_asset_mocker.connector import ActionContext
 from soar_asset_mocker.mocker.mocker import Mocker
@@ -21,7 +23,10 @@ class HTTPMocker(Mocker):
         vcr = VCR(record_mode="none")  # Will throw error if mock is missing
         vcr.persister = RegisterReadPersister(register, action)
         with vcr.use_cassette(self.mock_type.value):
-            yield
+            try:
+                yield
+            except CannotOverwriteExistingCassetteException:
+                raise MissingRecordingException
 
     @contextmanager
     def record(self, register: MocksRegister, action: ActionContext):

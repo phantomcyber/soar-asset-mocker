@@ -11,13 +11,13 @@ class MockOrchestrator:
     _MAPPING = {MockType.HTTP: HTTPMocker}
 
     @classmethod
-    def mocker_from_config(cls, config: AssetConfig) -> list[Mocker]:
+    def mockers_from_config(cls, config: AssetConfig) -> list[Mocker]:
         try:
             return [
                 cls._MAPPING[mock_type]() for mock_type in config.mock_types
             ]
         except KeyError:
-            raise Exception(
+            raise KeyError(
                 f"Unsupported mock types provided {config.mock_types}"
             )
 
@@ -26,7 +26,7 @@ class MockOrchestrator:
     def mock(cls, config: AssetConfig, action: ActionContext):
         register = MocksRegister.from_yaml(config.mock_file)
         with ExitStack() as stack:
-            mockers = cls.mocker_from_config(config)
+            mockers = cls.mockers_from_config(config)
             for m in mockers:
                 stack.enter_context(m.mock(register, action))
             yield
