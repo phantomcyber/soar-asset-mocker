@@ -31,7 +31,7 @@ class ActionRegister:
 class MocksRegister:
     register: dict[str, ActionRegister] = field(
         default_factory=lambda: {
-            mock_type: ActionRegister() for mock_type in MockType
+            mock_type.value: ActionRegister() for mock_type in MockType
         }
     )
 
@@ -46,7 +46,6 @@ class MocksRegister:
 
     @classmethod
     def from_yaml(cls, file):
-        print(file)
         return cls.from_dict(yaml.safe_load(file))
 
     def get_mock_recordings(self, mock_type: MockType, action: ActionContext):
@@ -76,7 +75,6 @@ class MocksRegister:
     def export_to_yaml(self, filepath: str):
         self.redact()
         with open(filepath, "w") as f:
-            print(asdict(self))
             yaml.dump(asdict(self), f)
 
     def export_to_vault(self, app, action: ActionContext, config: AssetConfig):

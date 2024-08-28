@@ -9,7 +9,7 @@ from tests.fixtures.connector import get_app_config, get_app_mock
 
 
 def get_decorated_method():
-    @AssetMocker.wrap((MockType.HTTP))
+    @AssetMocker.use(MockType.HTTP)
     def connector_method(app, param): ...
 
     return connector_method

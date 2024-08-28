@@ -50,5 +50,5 @@ class AssetMocker:
         return wrapper
 
     @classmethod
-    def wrap(cls, *mock_types: MockType):
+    def use(cls, *mock_types: MockType):
         return cls(mock_types)._wrap_core
