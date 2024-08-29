@@ -24,7 +24,7 @@ class MockOrchestrator:
     @classmethod
     @contextmanager
     def mock(cls, config: AssetConfig, action: ActionContext):
-        register = MocksRegister.from_yaml(config.mock_file)
+        register = MocksRegister.from_file(config.mock_file)
         with ExitStack() as stack:
             mockers = cls.mockers_from_config(config)
             for m in mockers:

@@ -1,3 +1,4 @@
-from tests.fixtures.mock_phantom import phantom_module
+from soar_asset_mocker.base import core
 
-__all__ = ("phantom_module",)
+# Allow for mocked phantom
+core.phantom_available = True

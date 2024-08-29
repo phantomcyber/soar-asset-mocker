@@ -17,9 +17,9 @@ def get_app_config(
     }
 
 
-def get_app_mock(get_config_retun):
+def get_app_mock(get_config_return):
     app = MagicMock(name="app")
-    app.get_config = MagicMock(return_value=get_config_retun)
+    app.get_config = MagicMock(return_value=get_config_return)
     app.save_artifact = MagicMock(return_value=(None, None, None))
     app.save_progress = MagicMock()
     results = MagicMock()

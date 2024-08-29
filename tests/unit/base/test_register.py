@@ -4,8 +4,7 @@ import pytest
 
 from soar_asset_mocker import consts
 from soar_asset_mocker.base.register import MocksRegister
-from soar_asset_mocker.connector import ActionContext, AssetConfig
-from tests.fixtures.mock_phantom import phantom_module
+from soar_asset_mocker.connector import ActionContext, AssetConfig, soar_libs
 
 
 def _get_test_register():
@@ -60,20 +59,19 @@ def test_register_get_entries():
     assert mocks.get_mock_recordings(mock_type, action) == [1, 2, 3]
 
 
-def test_export_to_yaml(tmp_path):
+def test_export_to_file(tmp_path):
     reg = _get_filled_register()
-    reg.export_to_yaml(tmp_path / "tmp.yaml")
-    with open(tmp_path / "tmp.yaml") as f:
-        nreg = MocksRegister.from_yaml(f.read())
+    reg.export_to_file()
+    nreg = MocksRegister.from_file(reg.export_to_file())
     assert nreg == reg
 
 
 def test_export_to_vault():
-    phantom_module.Vault.create_attachment = MagicMock(
+    soar_libs.Vault.create_attachment = MagicMock(
         return_value={"hash": "123", "succeeded": True}
     )
-    phantom_module.phantom.APP_SUCCESS = True
-    phantom_module.phantom.APP_JSON_HASH = "hash"
+    soar_libs.phantom.APP_SUCCESS = True
+    soar_libs.phantom.APP_JSON_HASH = "hash"
     app = MagicMock()
     app.save_artifact = MagicMock(return_value=[1, 2, 3])
 
@@ -102,7 +100,7 @@ def test_export_to_vault():
 
 
 def test_export_to_vault_fails():
-    phantom_module.Vault.create_attachment = MagicMock(
+    soar_libs.Vault.create_attachment = MagicMock(
         return_value={"hash": "123", "succeeded": False}
     )
     app = MagicMock()
@@ -143,6 +141,6 @@ def test_filename():
         "app_uid", consts.AssetMockerMode.RECORD, "", [mock_type], "1"
     )
     assert (
-        MocksRegister().get_filename(action, config, ".yaml")
-        == "asset-mock-app_asset_asset_1_id_container_1_run_run_1_0.yaml"
+        MocksRegister().get_filename(action, config, ".msgpack")
+        == "asset-mock-app_asset_asset_1_id_container_1_run_run_1_0.msgpack"
     )

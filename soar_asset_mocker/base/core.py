@@ -3,12 +3,15 @@ from contextlib import contextmanager
 from soar_asset_mocker.base.consts import MockType
 from soar_asset_mocker.connector.action_context import ActionContext
 from soar_asset_mocker.connector.asset_config import AssetConfig
+from soar_asset_mocker.connector.soar_libs import phantom_available
 from soar_asset_mocker.mocker.mocker_orchestrator import MockOrchestrator
 from soar_asset_mocker.mocker.recorder_orchestrator import RecordOrchestrator
 
 
 class AssetMocker:
     def __init__(self, types: tuple[MockType, ...] = ()) -> None:
+        if not phantom_available:
+            raise ModuleNotFoundError("PHANTOM MODULES ARE MISSING")
         self._mock_types = set(types)
 
     def _get_asset_config(self, app):

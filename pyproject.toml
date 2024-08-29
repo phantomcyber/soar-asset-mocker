@@ -6,11 +6,15 @@ authors = ["Michał Posłuszny <mposluszny@splunk.com>"]
 readme = "README.md"
 packages = [{include = "soar_asset_mocker"}]
 
+[tool.poetry.scripts]
+soar_asset_mocker = "soar_asset_mocker:cli_app"
+
 [tool.poetry.dependencies]
 python = "^3.9"
 vcrpy = "6.0.1"
 pyyaml = "6.0.1"
 dacite = "^1.8.1"
+msgpack = "^1.0.8"
 
 [tool.poetry.group.dev.dependencies]
 poetry = "^1.8.2"

@@ -1,7 +1,7 @@
 import time
 from dataclasses import asdict, dataclass, field
 
-import yaml
+import msgpack
 from dacite import from_dict
 
 from soar_asset_mocker.base.consts import MockType
@@ -45,8 +45,8 @@ class MocksRegister:
         return from_dict(cls, d)
 
     @classmethod
-    def from_yaml(cls, file):
-        return cls.from_dict(yaml.safe_load(file))
+    def from_file(cls, file):
+        return cls.from_dict(msgpack.unpackb(file))
 
     def get_mock_recordings(self, mock_type: MockType, action: ActionContext):
         return self.get_action_register(mock_type).get_recording_register(
@@ -72,18 +72,16 @@ class MocksRegister:
         for action_register in self.register.values():
             action_register.redact()
 
-    def export_to_yaml(self, filepath: str):
+    def export_to_file(self):
         self.redact()
-        with open(filepath, "w") as f:
-            yaml.dump(asdict(self), f)
+        return msgpack.packb(asdict(self), use_bin_type=True)
 
     def export_to_vault(self, app, action: ActionContext, config: AssetConfig):
         attach_resp = None
         name = self.get_name(action, config)
-        # TODO Switch from YAML to encoded msgpacks
-        file_name = self.get_filename(action, config, ".yaml")
+        file_name = self.get_filename(action, config, ".msgpack")
         attach_resp = Vault.create_attachment(
-            yaml.dump(asdict(self)),
+            self.export_to_file(),
             container_id=config.container_id,
             file_name=file_name,
         )

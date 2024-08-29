@@ -23,6 +23,17 @@ def redact_string(key: str, value):
     return value
 
 
+def update_nested_dict(mock_a, mock_b):
+    for k, v in mock_b.items():
+        if isinstance(v, dict):
+            mock_a[k] = update_nested_dict(mock_a.get(k, {}), v)
+        elif isinstance(v, list):
+            mock_a[k] = [*mock_a.get(k, []), *v]
+        else:
+            mock_a[k] = v
+    return mock_a
+
+
 def redact_nested(data, path=""):
     if isinstance(data, dict):
         for key, value in data.items():
