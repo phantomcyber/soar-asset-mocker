@@ -1,9 +1,11 @@
 import os
+from pathlib import Path
 from typing import Annotated
 
 import typer
 
 from .fetch import RecordingFetcher
+from .injector import inject_app
 
 cli_app = typer.Typer()
 
@@ -31,6 +33,11 @@ def fetch(
         max_attachments,
         verify_ssl,
     )
+
+
+@cli_app.command()
+def inject(app_json_path: Path):
+    inject_app(app_json_path)
 
 
 @cli_app.command()

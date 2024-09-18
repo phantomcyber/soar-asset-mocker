@@ -45,8 +45,12 @@ class MocksRegister:
         return from_dict(cls, d)
 
     @classmethod
-    def from_file(cls, file):
+    def from_file(cls, file: str):
         return cls.from_dict(msgpack.unpackb(file))
+
+    def export_to_file(self) -> str:
+        self.redact()
+        return msgpack.packb(asdict(self), use_bin_type=True)
 
     def get_mock_recordings(self, mock_type: MockType, action: ActionContext):
         return self.get_action_register(mock_type).get_recording_register(
@@ -71,10 +75,6 @@ class MocksRegister:
     def redact(self):
         for action_register in self.register.values():
             action_register.redact()
-
-    def export_to_file(self):
-        self.redact()
-        return msgpack.packb(asdict(self), use_bin_type=True)
 
     def export_to_vault(self, app, action: ActionContext, config: AssetConfig):
         attach_resp = None
