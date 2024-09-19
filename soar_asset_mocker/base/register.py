@@ -66,10 +66,12 @@ class MocksRegister:
 
     @staticmethod
     def get_filename(action: ActionContext, config: AssetConfig, suffix=""):
+        print(action, config)
         return f"asset-mock-{config.app_name}_asset_{action.asset_id}_{action.id}_container_{config.container_id}_run_{action.app_run_id}_{time.strftime('%Y%m%d-%H%M%S')}{suffix}"
 
     @staticmethod
     def get_name(action: ActionContext, config: AssetConfig):
+        print(action, config)
         return f"Asset Mock - {config.app_name} | {action.id}\nAsset:{action.asset_id} Container:{config.container_id}\nRun:{action.app_run_id}"
 
     def redact(self):

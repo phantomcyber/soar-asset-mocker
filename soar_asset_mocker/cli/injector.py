@@ -45,26 +45,37 @@ def add_am_lib(app_dir: Path):
 
 
 def update_dependencies(requirements_path: Path):
+    print("Updating requirements.txt")
+    mocker_reqs = (
+        f"\n#Asset Mocker Dependencies\n{export_requirements_to_string()}"
+    )
+    with open(requirements_path, "r") as f:
+        reqs = f.read()
+    if mocker_reqs in reqs:
+        return
     with open(requirements_path, "a+") as f:
-        f.write("\n#Asset Mocker Dependencies\n")
-        f.write(export_requirements_to_string())
+        f.write(mocker_reqs)
 
 
 def modify_code(f):
     modified_code = ""
-    imports_added = False
+    import_added = False
+    decorator_added = False
+    import_line = "from soar_asset_mocker import AssetMocker, MockType\n"
+    decorator_line = "@AssetMocker.use(MockType.HTTP)\n"
     for line in f.readlines():
-        if not imports_added and (
+        decorator_added = decorator_added or (decorator_line in line)
+        import_added = import_added or (import_line in line)
+
+        if not import_added and (
             line.startswith("import ") or line.startswith("from ")
         ):
-            modified_code += (
-                "from soar_asset_mocker import AssetMocker, MockType\n"
-            )
-            imports_added = True
-        if "def handle_action(self" in line:
-            modified_code += (
-                line.find("def") * " " + "@AssetMocker.use(MockType.HTTP)\n"
-            )
+            modified_code += import_line
+            import_added = True
+
+        if not decorator_added and "def handle_action(self" in line:
+            modified_code += line.find("def") * " " + decorator_line
+
         modified_code += line
     return modified_code
 

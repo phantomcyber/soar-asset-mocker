@@ -5,7 +5,6 @@ from yaml import dump
 from soar_asset_mocker.base.consts import MockType
 from soar_asset_mocker.base.core import AssetMocker
 from soar_asset_mocker.connector import ActionContext, AssetConfig
-from tests.fixtures.connector import get_app_config, get_app_mock
 
 
 def get_decorated_method():
@@ -16,9 +15,11 @@ def get_decorated_method():
 
 
 @patch("soar_asset_mocker.base.core.RecordOrchestrator")
-def test_record_scenario(orchestrator):
+def test_record_scenario(orchestrator, app_config, app_mock):
+    app_config["am_mode"] = "RECORD"
     method = get_decorated_method()
-    app = get_app_mock(get_app_config(mode="RECORD"))
+    app, server = app_mock
+    app.get_config.return_value = app_config
 
     method(app, {})
 
@@ -33,10 +34,13 @@ def test_record_scenario(orchestrator):
 
 
 @patch("soar_asset_mocker.base.core.MockOrchestrator")
-def test_mock_scenario(orchestrator):
+def test_mock_scenario(orchestrator, app_mock, app_config):
     method = get_decorated_method()
     file_content = dump({"http": {}})
-    app = get_app_mock(get_app_config(mode="MOCK", file_content=file_content))
+    app_config["am_mode"] = "MOCK"
+    app_config["am_file"] = file_content
+    app, server = app_mock
+    app.get_config.return_value = app_config
 
     method(app, {})
 
@@ -51,10 +55,11 @@ def test_mock_scenario(orchestrator):
 
 @patch("soar_asset_mocker.base.core.RecordOrchestrator")
 @patch("soar_asset_mocker.base.core.MockOrchestrator")
-def test_do_nothing_scenario(record_orch, mock_orch):
+def test_do_nothing_scenario(record_orch, mock_orch, app_mock, app_config):
+    app_config["am_mode"] = "NONE"
+    app, server = app_mock
+    app.get_config.return_value = app_config
     method = get_decorated_method()
-    app = get_app_mock(get_app_config(mode="NONE", file_content=dump({})))
-
     method(app, {})
 
     app.save_progress.assert_not_called()

@@ -12,9 +12,14 @@ class MockConnector:
     asset_id = str(uuid4())
     app_run_id = str(uuid4())
     app_name_uid = str(uuid4())
+    _BaseConnector__action_run_id = "1"
+    _phantom_url = ""
 
     def __init__(self, config) -> None:
         self.config = config
+
+    def get_phantom_base_url(self):
+        return self._phantom_url
 
     @AssetMocker.use(MockType.HTTP)
     def example_connector_action(self, param):

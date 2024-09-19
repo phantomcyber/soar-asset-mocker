@@ -14,8 +14,8 @@ class AssetMocker:
             raise ModuleNotFoundError("PHANTOM MODULES ARE MISSING")
         self._mock_types = set(types)
 
-    def _get_asset_config(self, app):
-        config = AssetConfig.from_app(app)
+    def _get_asset_config(self, app, action):
+        config = AssetConfig.from_app(app, action)
         if self._mock_types:
             config.mock_types = self._mock_types
         return config
@@ -40,8 +40,8 @@ class AssetMocker:
 
     def _wrap_core(self, handle):
         def wrapper(app, param):
-            config = self._get_asset_config(app)
             action = ActionContext.from_action_run(app, param)
+            config = self._get_asset_config(app, action)
             with self._mock_context(app, config, action):
                 with self._record_context(app, config, action):
                     out = handle(app, param)

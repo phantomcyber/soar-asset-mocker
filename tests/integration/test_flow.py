@@ -5,6 +5,7 @@ from tests.fixtures.mock_create_attachment import AttachmentHolder
 
 def test_record_and_mock(http_url_expect_text):
     url, expected_text = http_url_expect_text
+    MockConnector._phantom_url = url
     holder = AttachmentHolder()
     soar_libs.Vault.create_attachment = holder.create_attachment
     soar_libs.phantom.APP_SUCCESS = True
@@ -18,7 +19,6 @@ def test_record_and_mock(http_url_expect_text):
 
     connector.config["am_mode"] = "MOCK"
     connector.config["am_file"] = holder.attachments[0]
-    print(holder.attachments[-1])
 
     assert connector.example_connector_action({"url": url}) == expected_text
 

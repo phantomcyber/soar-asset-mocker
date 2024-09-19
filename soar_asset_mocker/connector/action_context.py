@@ -1,4 +1,7 @@
 from dataclasses import dataclass
+from typing import Optional
+
+import requests
 
 from soar_asset_mocker.utils.redactor import redact_nested
 
@@ -9,14 +12,42 @@ class ActionContext:
     params: dict
     app_run_id: str
     asset_id: str
+    action_run_id: str
+    playbook_run_id: Optional[str] = None
+    vpe_test_mode: bool = True
+
+    @staticmethod
+    def _get_playbook_run(app, run_id):
+        base_url = app.get_phantom_base_url()
+        endpoint = f"{base_url}/rest/playbook_run/{run_id}"
+        r = requests.get(endpoint, verify=False)
+        if r.status_code != 200:
+            return {}
+        return r.json()
+
+    @staticmethod
+    def _get_action_run(app, action_id):
+        base_url = app.get_phantom_base_url()
+        endpoint = f"{base_url}/rest/action_run/{action_id}"
+        r = requests.get(endpoint, verify=False)
+        if r.status_code != 200:
+            return {}
+        return r.json()
 
     @classmethod
     def from_action_run(cls, app, param):
+        action_run = cls._get_action_run(
+            app, app._BaseConnector__action_run_id
+        )
+        run_id = action_run.get("playbook_run")
         return ActionContext(
             id=app.get_action_identifier(),
             params=param,
             app_run_id=app.get_app_run_id(),
+            action_run_id=action_run.get("id"),
+            playbook_run_id=run_id,
             asset_id=app.get_asset_id(),
+            vpe_test_mode=cls._get_playbook_run(app, run_id).get("test_mode"),
         )
 
     @property

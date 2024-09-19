@@ -11,7 +11,7 @@ def _get_test_register():
     return (
         MocksRegister(),
         consts.MockType.HTTP,
-        ActionContext("id", {"param": 1}, "run_1", "asset_1"),
+        ActionContext("id", {"param": 1}, "run_1", "action_1", "asset_1"),
     )
 
 
@@ -77,7 +77,13 @@ def test_export_to_vault():
 
     mocks, mock_type, action = _get_test_register()
     config = AssetConfig(
-        "app_uid", consts.AssetMockerMode.RECORD, "", [mock_type], "1"
+        "app_uid",
+        consts.AssetMockerMode.RECORD,
+        "",
+        [mock_type],
+        "1",
+        action,
+        "ALL",
     )
     mocks.get_filename = MagicMock(return_value="filename")
     mocks.append_mock_recordings([1, 2, 3], mock_type, action)
@@ -108,7 +114,13 @@ def test_export_to_vault_fails():
 
     mocks, mock_type, action = _get_test_register()
     config = AssetConfig(
-        "app_uid", consts.AssetMockerMode.RECORD, "", [mock_type], "1"
+        "app_uid",
+        consts.AssetMockerMode.RECORD,
+        "",
+        [mock_type],
+        "1",
+        action,
+        "ALL",
     )
     pytest.raises(
         Exception, lambda: mocks.export_to_vault(app, action, config)
@@ -135,12 +147,8 @@ def test_redact_register():
 
 
 @patch("time.strftime", MagicMock(return_value="0"))
-def test_filename():
-    _, mock_type, action = _get_test_register()
-    config = AssetConfig(
-        "app_uid", consts.AssetMockerMode.RECORD, "", [mock_type], "1"
-    )
+def test_filename(asset_config, action_context):
     assert (
-        MocksRegister().get_filename(action, config, ".msgpack")
-        == "asset-mock-app_asset_asset_1_id_container_1_run_run_1_0.msgpack"
+        MocksRegister().get_filename(action_context, asset_config, ".msgpack")
+        == "asset-mock-app_asset_asset_1_action_id_container_1_run_run_1_0.msgpack"
     )
