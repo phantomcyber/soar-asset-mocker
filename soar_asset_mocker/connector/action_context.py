@@ -14,7 +14,7 @@ class ActionContext:
     asset_id: str
     action_run_id: str
     playbook_run_id: Optional[str] = None
-    vpe_test_mode: bool = True
+    vpe_test_mode: bool = False
 
     @staticmethod
     def _get_playbook_run(app, run_id):
@@ -29,6 +29,7 @@ class ActionContext:
     def _get_action_run(app, action_id):
         base_url = app.get_phantom_base_url()
         endpoint = f"{base_url}/rest/action_run/{action_id}"
+        print(endpoint)
         r = requests.get(endpoint, verify=False)
         if r.status_code != 200:
             return {}
@@ -47,7 +48,9 @@ class ActionContext:
             action_run_id=action_run.get("id"),
             playbook_run_id=run_id,
             asset_id=app.get_asset_id(),
-            vpe_test_mode=cls._get_playbook_run(app, run_id).get("test_mode"),
+            vpe_test_mode=cls._get_playbook_run(app, run_id).get(
+                "test_mode", False
+            ),
         )
 
     @property

@@ -14,40 +14,40 @@ class AssetMocker:
             raise ModuleNotFoundError("PHANTOM MODULES ARE MISSING")
         self._mock_types = set(types)
 
-    def _get_asset_config(self, app, action):
-        config = AssetConfig.from_app(app, action)
+    def _get_asset_config(self, app):
+        config = AssetConfig.from_app(app)
         if self._mock_types:
             config.mock_types = self._mock_types
         return config
 
     @contextmanager
     def _mock_context(self, app, config: AssetConfig, action: ActionContext):
-        if not config.is_mocking:
+        if not config.is_mocking(action):
             yield
             return
-        app.save_progress(f"[Asset Mocker] {config.description}")
+        app.save_progress(f"[Asset Mocker] {config.description(action)}")
         with MockOrchestrator.mock(config, action):
             yield
 
     @contextmanager
     def _record_context(self, app, config: AssetConfig, action: ActionContext):
-        if not config.is_recording:
+        if not config.is_recording(action):
             yield
             return
-        app.save_progress(f"[Asset Mocker] {config.description}")
+        app.save_progress(f"[Asset Mocker] {config.description(action)}")
         with RecordOrchestrator.record(app, config, action):
             yield
 
     def _wrap_core(self, handle):
         def wrapper(app, param):
             action = ActionContext.from_action_run(app, param)
-            config = self._get_asset_config(app, action)
+            config = self._get_asset_config(app)
             with self._mock_context(app, config, action):
                 with self._record_context(app, config, action):
                     out = handle(app, param)
-            if config.active:
+            if config.is_active(action):
                 results = app.get_action_results()
-                results[-1].update_summary(config.summary)
+                results[-1].update_summary(config.summary(action))
             return out
 
         return wrapper
