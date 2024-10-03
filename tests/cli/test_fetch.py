@@ -1,4 +1,4 @@
-import yaml
+import msgpack
 from typer.testing import CliRunner
 
 from soar_asset_mocker.cli.app import cli_app
@@ -13,12 +13,42 @@ def test_fetch(tmp_path, httpserver):
     path = str(tmp_path / "tmp.yaml")
     httpserver.expect_request(
         f"/rest/container/{container_id}/attachments",
-        query_string="sort=create_time&order=desc&page=0&page_size=1000",
+        query_string="sort=create_time&order=desc&page=0&page_size=500&pretty=true",
     ).respond_with_json(
         {
             "data": [
-                {"name": "1", "vault_document": vault_doc},
-                {"name": "2", "vault_document": vault_doc},
+                {
+                    "name": "1",
+                    "create_time": "00:00 01.01.1990",
+                    "vault_document": vault_doc,
+                    "_pretty_metadata": {
+                        "action_run_id": "3",
+                        "scope": "VPE",
+                        "playbook_name": "pb_1",
+                        "playbook_run_id": "1",
+                        "app_name": "abc",
+                    },
+                },
+                {
+                    "name": "2",
+                    "create_time": "00:00 01.01.1990",
+                    "vault_document": vault_doc,
+                    "_pretty_metadata": {
+                        "action_run_id": "1",
+                        "scope": "VPE",
+                        "app_name": "abc",
+                    },
+                },
+                {
+                    "name": "3",
+                    "create_time": "00:00 01.01.1990",
+                    "vault_document": vault_doc,
+                    "_pretty_metadata": {
+                        "action_run_id": "2",
+                        "scope": "VPE",
+                        "app_name": "abc",
+                    },
+                },
             ]
         }
     )
@@ -27,7 +57,9 @@ def test_fetch(tmp_path, httpserver):
     ).respond_with_json({"hash": hash})
     httpserver.expect_request(
         "/rest/download_attachment", query_string=f"vault_id={hash}"
-    ).respond_with_json({"register": [{"request": {"hash": hash}}]})
+    ).respond_with_data(
+        msgpack.packb({"register": [{"request": {"hash": hash}}]})
+    )
 
     result = runner.invoke(
         cli_app,
@@ -38,12 +70,15 @@ def test_fetch(tmp_path, httpserver):
             "--phantom-url",
             httpserver.url_for(""),
         ],
-        input="admin\npassword\n0-3\n0-3\n",
+        input="admin\npassword\n0,1\n0\n",
     )
-    assert result.exit_code == 0, result.output
-    with open(path) as f:
-        assert yaml.safe_load(f) == {
+    assert (
+        result.exit_code == 0
+    ), f"out:{result.output}\nexc:{result.exception}"
+    with open(path, "rb") as f:
+        assert msgpack.unpackb(f.read()) == {
             "register": [
+                {"request": {"hash": hash}},
                 {"request": {"hash": hash}},
                 {"request": {"hash": hash}},
             ]
@@ -54,7 +89,7 @@ def test_fetch_no_attachments(tmp_path, httpserver):
     container_id = "1"
     httpserver.expect_request(
         f"/rest/container/{container_id}/attachments",
-        query_string="sort=create_time&order=desc&page=0&page_size=1000",
+        query_string="sort=create_time&order=desc&page=0&page_size=500&pretty=true",
     ).respond_with_json({})
 
     result = runner.invoke(

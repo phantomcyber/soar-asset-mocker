@@ -18,7 +18,7 @@ def export_requirements_to_string():
     # TODO change to simpler requirements.txt modification after pypi release
 
     # Load the Poetry instance from the current project
-    poetry = Factory().create_poetry()
+    poetry = Factory().create_poetry(cwd=repo_path())
 
     # Create a buffer for output
     out = BufferedOutput()

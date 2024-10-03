@@ -5,6 +5,10 @@ import msgpack
 from dacite import from_dict
 
 from soar_asset_mocker.base.consts import MockType
+from soar_asset_mocker.base.serializers import (
+    decode_unserializable_types,
+    encode_unserializable_types,
+)
 from soar_asset_mocker.connector.action_context import ActionContext
 from soar_asset_mocker.connector.asset_config import AssetConfig
 from soar_asset_mocker.connector.soar_libs import Vault, phantom
@@ -21,7 +25,7 @@ class ActionRegister:
         return self.actions[action.id][action.params_key]
 
     def add_recording(self, recording: list, action: ActionContext) -> None:
-        self.get_recording_register(action).extend(redact_nested(recording))
+        self.get_recording_register(action).extend(recording)
 
     def redact(self):
         self.actions = redact_nested(self.actions)
@@ -45,12 +49,18 @@ class MocksRegister:
         return from_dict(cls, d)
 
     @classmethod
-    def from_file(cls, file: str):
-        return cls.from_dict(msgpack.unpackb(file))
+    def from_file(cls, file: bytes):
+        return cls.from_dict(
+            msgpack.unpackb(file, object_hook=decode_unserializable_types)
+        )
 
-    def export_to_file(self) -> str:
+    def export_to_file(self) -> bytes:
         self.redact()
-        return msgpack.packb(asdict(self), use_bin_type=True)
+        return msgpack.packb(
+            asdict(self),
+            use_bin_type=True,
+            default=encode_unserializable_types,
+        )
 
     def get_mock_recordings(self, mock_type: MockType, action: ActionContext):
         return self.get_action_register(mock_type).get_recording_register(
@@ -66,13 +76,11 @@ class MocksRegister:
 
     @staticmethod
     def get_filename(action: ActionContext, config: AssetConfig, suffix=""):
-        print(action, config)
-        return f"asset-mock-{config.app_name}_asset_{action.asset_id}_{action.id}_container_{config.container_id}_run_{action.app_run_id}_{time.strftime('%Y%m%d-%H%M%S')}{suffix}"
+        return f"mock_{config.app_name}_asset_{action.asset_id}_{action.name}_container_{config.container_id}_run_{action.playbook_run_id}_{time.strftime('%Y%m%d-%H%M%S')}{suffix}"
 
     @staticmethod
     def get_name(action: ActionContext, config: AssetConfig):
-        print(action, config)
-        return f"Asset Mock - {config.app_name} | {action.id}\nAsset:{action.asset_id} Container:{config.container_id}\nRun:{action.app_run_id}"
+        return f"Asset Mock - {config.app_name} | {action.app_run_id}\nAsset:{action.asset_id} Container:{config.container_id}\nPb Run:{action.playbook_run_id}"
 
     def redact(self):
         for action_register in self.register.values():
@@ -86,6 +94,7 @@ class MocksRegister:
             self.export_to_file(),
             container_id=config.container_id,
             file_name=file_name,
+            metadata=self.create_metadata(action, config),
         )
         if attach_resp.get("succeeded"):
             # Create vault artifact
@@ -109,4 +118,18 @@ class MocksRegister:
             },
             "run_automation": False,
             "source_data_identifier": None,
+        }
+
+    def create_metadata(self, action: ActionContext, config: AssetConfig):
+        return {
+            "playbook_run_id": action.playbook_run_id,
+            "action_run_id": action.action_run_id,
+            "app_run_id": action.app_run_id,
+            "container_id": config.container_id,
+            "asset_id": action.asset_id,
+            "app_name": config.app_name,
+            "playbook_name": action.playbook_name,
+            "action_name": action.name,
+            "scope": config.scope.value,
+            "asset_mocker_version": "0.1.1",  # TODO sync with versioning
         }

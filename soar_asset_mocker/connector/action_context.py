@@ -15,6 +15,17 @@ class ActionContext:
     action_run_id: str
     playbook_run_id: Optional[str] = None
     vpe_test_mode: bool = False
+    playbook_name: str = ""
+    name: str = ""
+
+    @staticmethod
+    def _get_playbook(app, playbook_id):
+        base_url = app.get_phantom_base_url()
+        endpoint = f"{base_url}/rest/playbook/{playbook_id}"
+        r = requests.get(endpoint, verify=False)
+        if r.status_code != 200:
+            return {}
+        return r.json()
 
     @staticmethod
     def _get_playbook_run(app, run_id):
@@ -41,6 +52,8 @@ class ActionContext:
             app, app._BaseConnector__action_run_id
         )
         run_id = action_run.get("playbook_run")
+        playbook_run = cls._get_playbook_run(app, run_id)
+        playbook = cls._get_playbook(app, playbook_run.get("playbook"))
         return ActionContext(
             id=app.get_action_identifier(),
             params=param,
@@ -48,9 +61,9 @@ class ActionContext:
             action_run_id=action_run.get("id"),
             playbook_run_id=run_id,
             asset_id=app.get_asset_id(),
-            vpe_test_mode=cls._get_playbook_run(app, run_id).get(
-                "test_mode", False
-            ),
+            vpe_test_mode=playbook_run.get("test_mode", False),
+            playbook_name=playbook.get("name", ""),
+            name=app.get_action_name(),
         )
 
     @property

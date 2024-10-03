@@ -1,3 +1,4 @@
+from io import BytesIO
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -71,7 +72,7 @@ def test_export_to_vault(asset_config, action_context, mock_register):
 
     app.save_artifact.assert_called_once_with(
         {
-            "name": f"Asset Mock - {asset_config.app_name} | {action_context.id}\nAsset:{action_context.asset_id} Container:{asset_config.container_id}\nRun:{action_context.app_run_id}",
+            "name": f"Asset Mock - {asset_config.app_name} | {action_context.app_run_id}\nAsset:{action_context.asset_id} Container:{asset_config.container_id}\nPb Run:{action_context.playbook_run_id}",
             "container_id": "1",
             "cef": {
                 "vaultId": "123",
@@ -100,6 +101,24 @@ def test_export_to_vault_fails(asset_config, action_context, mock_register):
     )
 
 
+def test_serialize_register():
+    content = {
+        MockType.HTTP: {
+            "actions": {
+                "action_id_1": {
+                    "param_1": [
+                        {"name": "john", "password": BytesIO(bytes(123))}
+                    ]
+                }
+            }
+        }
+    }
+
+    reg = MocksRegister.from_dict(content.copy())
+    binary = reg.export_to_file()
+    assert reg == MocksRegister.from_file(binary)
+
+
 def test_redact_register():
     content = {
         MockType.HTTP: {
@@ -123,5 +142,5 @@ def test_redact_register():
 def test_filename(asset_config, action_context):
     assert (
         MocksRegister().get_filename(action_context, asset_config, ".msgpack")
-        == "asset-mock-app_asset_asset_1_action_id_container_1_run_run_1_0.msgpack"
+        == "mock_app_asset_asset_1_action_container_1_run_pb_run_id_0.msgpack"
     )

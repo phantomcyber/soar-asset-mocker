@@ -28,6 +28,9 @@ class MockConnector:
     def get_app_run_id(self):
         return self.get_app_run_id
 
+    def get_action_name(self):
+        return "action_name"
+
     def get_action_results(self):
         return [MagicMock()]
 
@@ -48,3 +51,6 @@ class MockConnector:
 
     def get_config(self):
         return self.config
+
+    def debug_print(self, *args, **kwargs):
+        print(*args, **kwargs)

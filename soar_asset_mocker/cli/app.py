@@ -17,7 +17,7 @@ def fetch(
     username: Annotated[str, typer.Option(prompt=True)],
     password: Annotated[str, typer.Option(prompt=True, hide_input=True)],
     phantom_url: str = os.getenv("PHANTOM_URL", ""),
-    max_attachments: int = 25,
+    max_attachments: int = 500,
     verify_ssl: bool = False,
 ):
     if not phantom_url:
@@ -36,7 +36,7 @@ def fetch(
 
 
 @cli_app.command()
-def inject(app_json_path: Path):
+def inject(app_json_path: Path):  # pragma: no cover
     inject_app(app_json_path)
 
 

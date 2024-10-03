@@ -11,7 +11,9 @@ from soar_asset_mocker.mocker.recorder_orchestrator import RecordOrchestrator
 class AssetMocker:
     def __init__(self, types: tuple[MockType, ...] = ()) -> None:
         if not phantom_available:
-            raise ModuleNotFoundError("PHANTOM MODULES ARE MISSING")
+            raise ModuleNotFoundError(
+                "PHANTOM MODULES ARE MISSING"
+            )  # pragma:no cover
         self._mock_types = set(types)
 
     def _get_asset_config(self, app):

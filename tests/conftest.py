@@ -37,7 +37,8 @@ def action_context():
         app_run_id="run_1",
         asset_id="asset_1",
         action_run_id="action_run_id",
-        playbook_run_id="pb_id",
+        playbook_run_id="pb_run_id",
+        name="action",
     )
 
 
@@ -88,8 +89,10 @@ def app_mock(httpserver, asset_config, action_context):
     app.get_phantom_base_url = MagicMock(return_value=httpserver.url_for(""))
     httpserver.expect_request(
         "/rest/action_run/action_run_id"
-    ).respond_with_json({"id": "action_run_id", "playbook_run": "pb_id"})
-    httpserver.expect_request("/rest/playbook_run/pb_id").respond_with_json(
-        {"test_mode": False}
-    )
+    ).respond_with_json({"id": "action_run_id", "playbook_run": "pb_run_id"})
+    httpserver.expect_request(
+        "/rest/playbook_run/pb_run_id"
+    ).respond_with_json({"playbook": "pb_id", "test_mode": False})
+    httpserver.expect_request("/rest/playbook/pb_id").respond_with_json({})
+    app.get_action_name = MagicMock(return_value=action_context.name)
     return app, httpserver

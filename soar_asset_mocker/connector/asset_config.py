@@ -16,7 +16,7 @@ from .action_context import ActionContext
 class AssetConfig:
     app_name_uid: str
     mode: AssetMockerMode
-    mock_file: str
+    mock_file: bytes
     mock_types: set[MockType]
     container_id: str
     scope: AssetMockerScope
@@ -76,7 +76,7 @@ class AssetConfig:
         file_name: str = "",
         container_id: Optional[int] = None,
     ):
-        if vault_id and file_name and container_id:
+        if not (vault_id or file_name or container_id):
             return ""
         success, message, info = vault_info(
             vault_id=vault_id, container_id=container_id, file_name=file_name
@@ -104,7 +104,7 @@ class AssetConfig:
                 app,
                 vault_id=os.getenv("SOAR_AM_FILE_VAULT_ID", ""),
                 container_id=cls._parse_container_id(
-                    os.getenv("SOAR_AM_FILE_CONTAINER_ID", "")
+                    app, os.getenv("SOAR_AM_FILE_CONTAINER_ID", "")
                 ),
                 file_name=os.getenv("SOAR_AM_FILE_NAME", ""),
             )
