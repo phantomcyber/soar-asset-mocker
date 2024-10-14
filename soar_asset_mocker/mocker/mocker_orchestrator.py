@@ -13,13 +13,9 @@ class MockOrchestrator:
     @classmethod
     def mockers_from_config(cls, config: AssetConfig) -> list[Mocker]:
         try:
-            return [
-                cls._MAPPING[mock_type]() for mock_type in config.mock_types
-            ]
+            return [cls._MAPPING[mock_type]() for mock_type in config.mock_types]
         except KeyError:
-            raise KeyError(
-                f"Unsupported mock types provided {config.mock_types}"
-            )
+            raise KeyError(f"Unsupported mock types provided {config.mock_types}")
 
     @classmethod
     @contextmanager

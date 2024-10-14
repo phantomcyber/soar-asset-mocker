@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Any, Optional, Sequence
+from typing import Optional, Sequence
 
 import msgpack
 import typer
@@ -37,64 +37,47 @@ class RecordingFetcher:
         verify_ssl: bool = False,
     ):
         fetcher = cls(phantom_url, username, password, verify_ssl)
-        actions, playbooks = fetcher.get_attachments(
-            container_id, max_attachments
-        )
+        actions, playbooks = fetcher.get_attachments(container_id, max_attachments)
         if not actions and not playbooks:
             print("No attachments to preview, record some actions first")
             exit(2)
-        recording: dict[Any, Any] = {}
+        recording: dict = {}
         print(f"{len(actions)} actions found")
         if actions:
             fetcher.fetch_actions(actions, recording)
-        print(f"{len(playbooks.keys())} playbooks found")
+        print(f"{len(playbooks)} playbooks found")
         if playbooks:
             fetcher.fetch_playbooks(playbooks, recording)
         with open(output_path, "wb") as f:
             msgpack.dump(recording, f)
         print(f"Recording available at {output_path}")
 
-    def fetch_actions(self, actions: list[dict], recording: dict[Any, Any]):
-        print()
-        print("Showing catched actions")
+    def fetch_actions(self, actions: list[dict], recording: dict):
+        print("\nShowing catched actions")
         for i, attachment in enumerate(actions):
             meta = attachment["_pretty_metadata"]
-            action_run_id = meta["action_run_id"] or 0
-            print(
-                f"\t* {i} {meta['app_name']} {meta.get('action_name','unknown_action')} run id:{action_run_id} {attachment['create_time']}"
-            )
-        print()
+            action_run_id = meta.get("action_run_id", 0)
+            print(f"\t* {i} {meta['app_name']} {meta.get('action_name','unknown_action')} run id:{action_run_id} {attachment['create_time']}")
         indexes = self.select_indexes()
-        print("Dowloading action recordings")
+        print("\nDowloading action recordings")
         recording = self.download_recordings(actions, recording, indexes)
 
-    def fetch_playbooks(
-        self, playbooks: defaultdict, recording: dict[Any, Any]
-    ):
-        print()
-        print("Showing catched playbooks")
-        pbids = list(playbooks.keys())
+    def fetch_playbooks(self, playbooks: defaultdict, recording: dict):
+        print("\nShowing catched playbooks")
+        pbids = list(playbooks)
         for i, pbid in enumerate(pbids):
-            print(
-                f"\t* {i} {pbid} [{len(playbooks[pbid])} actions] {playbooks[pbid][0]['create_time']}"
-            )
-        print()
+            print(f"\t* {i} {pbid} [{len(playbooks[pbid])} actions] {playbooks[pbid][0]['create_time']}")
+        print()  # newline
         pbindex = self.select_playbook()
         if pbindex is not None:
             print("Dowloading playbook recordings")
-            recording = self.download_recordings(
-                playbooks[pbids[pbindex]], recording
-            )
+            recording = self.download_recordings(playbooks[pbids[pbindex]], recording)
 
     def download_recording(self, attachment):
-        resp = self.s.get(
-            f"{self.url}/rest/vault_document/{attachment['vault_document']}"
-        )
+        resp = self.s.get(f"{self.url}/rest/vault_document/{attachment['vault_document']}")
         doc = resp.json()
 
-        resp = self.s.get(
-            f"{self.url}/rest/download_attachment?vault_id={doc['hash']}"
-        )
+        resp = self.s.get(f"{self.url}/rest/download_attachment?vault_id={doc['hash']}")
         return msgpack.unpackb(resp.content)
 
     def download_recordings(
@@ -107,9 +90,7 @@ class RecordingFetcher:
             indexes = range(len(attachments))
         for i in indexes:
             print(i, attachments[i]["name"])
-            update_nested_dict(
-                recording_pack, self.download_recording(attachments[i])
-            )
+            update_nested_dict(recording_pack, self.download_recording(attachments[i]))
 
     @staticmethod
     def get_session(username: str, password: str, verify_ssl: bool = False):
@@ -122,17 +103,12 @@ class RecordingFetcher:
 
     @staticmethod
     def select_indexes():
-        index_prompt = typer.prompt(
-            "Select attachments to download, such as 1,2,3"
-        )
-        index_split = index_prompt.split(",")
-        return [int(i) for i in index_split]
+        index_prompt = typer.prompt("Select attachments to download, such as 1,2,3")
+        return [int(i) for i in index_prompt.split(",")]
 
     @staticmethod
     def select_playbook():
-        index_prompt = typer.prompt(
-            "Select playbook to download, single number"
-        )
+        index_prompt = typer.prompt("Select a single playbook to download by id")
         try:
             return int(index_prompt)
         except ValueError:

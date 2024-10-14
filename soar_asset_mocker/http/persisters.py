@@ -41,9 +41,7 @@ class RegisterWritePersister(RegisterPersister):
 class RegisterReadPersister(RegisterPersister):
 
     def load_cassette(self, mock_type: str, serializer):
-        recordings = self.register.get_mock_recordings(
-            MockType(mock_type), self.action
-        )
+        recordings = self.register.get_mock_recordings(MockType(mock_type), self.action)
         if len(recordings) == 0:
             raise CassetteNotFoundError
         return deserialize(

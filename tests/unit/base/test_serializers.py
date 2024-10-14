@@ -2,10 +2,7 @@ from io import BytesIO
 
 import pytest
 
-from soar_asset_mocker.base.serializers import (
-    decode_unserializable_types,
-    encode_unserializable_types,
-)
+from soar_asset_mocker.base.serializers import decode_unserializable_types, encode_unserializable_types
 
 
 @pytest.mark.parametrize("content", [BytesIO(bytes(1)), "text"])

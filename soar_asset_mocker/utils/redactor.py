@@ -1,20 +1,22 @@
 import json
 
 FIELDS_TO_REDACT = [
-    "password",
-    "confirm_password",
-    "user_session_token",
-    "originalTo",
-    "originalFrom",
-    "reporter",
-    "token",
     "authorization",
     "bearer",
-    "secret",
+    "confirm_password",
     "key",
+    "originalTo",
+    "originalFrom",
+    "password",
+    "reporter",
+    "secret",
+    "token",
+    "user_session_token",
 ]
 
-REDACTED = "*****"
+REDACTED = "*ASSET_MOCKER_REDACTED*"
+
+FIELDS_TO_REDACT_PAIRS = [(f, REDACTED) for f in FIELDS_TO_REDACT]
 
 
 def redact_string(key: str, value):

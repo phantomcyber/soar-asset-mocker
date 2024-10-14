@@ -21,9 +21,7 @@ def fetch(
     verify_ssl: bool = False,
 ):
     if not phantom_url:
-        phantom_url = typer.prompt(
-            "Enter SOAR url (or fill PHANTOM_URL env variable): "
-        )
+        phantom_url = typer.prompt("Enter SOAR url (or fill PHANTOM_URL env variable): ")
     RecordingFetcher.fetch(
         phantom_url,
         container_id,

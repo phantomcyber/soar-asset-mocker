@@ -6,7 +6,7 @@ import requests
 from soar_asset_mocker import AssetMocker, MockType
 
 
-class MockConnector:
+class ConnectorMock:
     container_id = str(uuid4())
     action_id = str(uuid4())
     asset_id = str(uuid4())

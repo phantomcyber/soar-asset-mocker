@@ -52,12 +52,8 @@ def test_fetch(tmp_path, httpserver):
             ]
         }
     )
-    httpserver.expect_request(
-        f"/rest/vault_document/{vault_doc}"
-    ).respond_with_json({"hash": hash})
-    httpserver.expect_request(
-        "/rest/download_attachment", query_string=f"vault_id={hash}"
-    ).respond_with_data(
+    httpserver.expect_request(f"/rest/vault_document/{vault_doc}").respond_with_json({"hash": hash})
+    httpserver.expect_request("/rest/download_attachment", query_string=f"vault_id={hash}").respond_with_data(
         msgpack.packb({"register": [{"request": {"hash": hash}}]})
     )
 
@@ -72,9 +68,7 @@ def test_fetch(tmp_path, httpserver):
         ],
         input="admin\npassword\n0,1\n0\n",
     )
-    assert (
-        result.exit_code == 0
-    ), f"out:{result.output}\nexc:{result.exception}"
+    assert result.exit_code == 0, f"out:{result.output}\nexc:{result.exception}"
     with open(path, "rb") as f:
         assert msgpack.unpackb(f.read()) == {
             "register": [

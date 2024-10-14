@@ -37,13 +37,13 @@ in-project = true
 
 [tool.black]
 target-version = ['py39']
-line-length = 79
+line-length = 145
 
 [tool.isort]
 profile = "black"
 py_version=39
 multi_line_output = 3
-line_length = 79
+line_length = 145
 
 [tool.coverage.report]
 omit = [

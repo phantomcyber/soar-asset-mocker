@@ -1,4 +1,5 @@
 from contextlib import contextmanager
+from functools import wraps
 
 from soar_asset_mocker.base.consts import MockType
 from soar_asset_mocker.connector.action_context import ActionContext
@@ -11,9 +12,7 @@ from soar_asset_mocker.mocker.recorder_orchestrator import RecordOrchestrator
 class AssetMocker:
     def __init__(self, types: tuple[MockType, ...] = ()) -> None:
         if not phantom_available:
-            raise ModuleNotFoundError(
-                "PHANTOM MODULES ARE MISSING"
-            )  # pragma:no cover
+            raise ModuleNotFoundError("PHANTOM MODULES ARE MISSING")  # pragma:no cover
         self._mock_types = set(types)
 
     def _get_asset_config(self, app):
@@ -41,16 +40,25 @@ class AssetMocker:
             yield
 
     def _wrap_core(self, handle):
+        @wraps
         def wrapper(app, param):
-            action = ActionContext.from_action_run(app, param)
-            config = self._get_asset_config(app)
-            with self._mock_context(app, config, action):
-                with self._record_context(app, config, action):
-                    out = handle(app, param)
-            if config.is_active(action):
-                results = app.get_action_results()
-                results[-1].update_summary(config.summary(action))
-            return out
+            try:
+                action = ActionContext.from_action_run(app, param)
+                config = self._get_asset_config(app)
+                with self._mock_context(app, config, action):
+                    with self._record_context(app, config, action):
+                        out = handle(app, param)
+                if config.is_active(action):
+                    results = app.get_action_results()
+                    results[-1].update_summary(config.summary(action))
+                return out
+            except Exception as e:
+                import traceback
+
+                app.save_progress("[Asset Mocker] Traceback")
+                app.save_progress(str(e))
+                app.save_progress(str(traceback.format_exc()))
+                raise e
 
         return wrapper
 

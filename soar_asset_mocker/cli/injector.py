@@ -23,12 +23,7 @@ def export_requirements_to_string():
     # Create a buffer for output
     out = BufferedOutput()
     io = IO(Input(), out, None)
-    exporter = (
-        Exporter(poetry, io)
-        .with_credentials(False)
-        .with_hashes(False)
-        .with_urls(False)
-    )
+    exporter = Exporter(poetry, io).with_credentials(False).with_hashes(False).with_urls(False)
 
     exporter.export("requirements.txt", Path.cwd(), io)
     requirements = ""
@@ -46,9 +41,7 @@ def add_am_lib(app_dir: Path):
 
 def update_dependencies(requirements_path: Path):
     print("Updating requirements.txt")
-    mocker_reqs = (
-        f"\n#Asset Mocker Dependencies\n{export_requirements_to_string()}"
-    )
+    mocker_reqs = f"\n#Asset Mocker Dependencies\n{export_requirements_to_string()}"
     with open(requirements_path, "r") as f:
         reqs = f.read()
     if mocker_reqs in reqs:
@@ -61,18 +54,22 @@ def modify_code(f):
     modified_code = ""
     import_added = False
     decorator_added = False
+
     import_line = "from soar_asset_mocker import AssetMocker, MockType\n"
     decorator_line = "@AssetMocker.use(MockType.HTTP)\n"
-    for line in f.readlines():
-        decorator_added = decorator_added or (decorator_line in line)
-        import_added = import_added or (import_line in line)
 
-        if not import_added and (
-            line.startswith("import ") or line.startswith("from ")
-        ):
+    for line in f.readlines():
+        decorator_added = decorator_added or decorator_line in line
+        import_added = import_added or import_line in line
+
+        # search for import part of the code to append import_line
+        # if it wasn't appended yet.
+        if not import_added and (line.startswith("import ") or line.startswith("from ")):
             modified_code += import_line
             import_added = True
 
+        # search for `handle_action` method in connector code
+        # append decorator to this method if it's not already there
         if not decorator_added and "def handle_action(self" in line:
             modified_code += line.find("def") * " " + decorator_line
 

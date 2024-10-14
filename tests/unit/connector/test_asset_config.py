@@ -21,9 +21,7 @@ def test_asset_config_from_env(app_mock, asset_config, monkeypatch):
 
 
 @pytest.mark.parametrize("container_id", ["", "a", "1"])
-def test_asset_config_from_env_load_artifact(
-    container_id, app_mock, asset_config, monkeypatch, tmp_path
-):
+def test_asset_config_from_env_load_artifact(container_id, app_mock, asset_config, monkeypatch, tmp_path):
     filename = "abc.msgpack"
     content = bytes(123)
     asset_config.mock_file = content
@@ -50,9 +48,7 @@ def test_asset_config_from_env_load_artifact(
     assert AssetConfig.from_app(app) == asset_config
 
 
-def test_asset_config_from_env_no_artifact(
-    app_mock, asset_config, monkeypatch
-):
+def test_asset_config_from_env_no_artifact(app_mock, asset_config, monkeypatch):
     app, http = app_mock
     app.get_config.return_value = {"directory": "app_1234"}
     asset_config.mock_types = set()
@@ -65,9 +61,7 @@ def test_asset_config_from_env_no_artifact(
     assert AssetConfig.from_app(app) == asset_config
 
 
-def test_asset_config_from_env_artifact_fail(
-    app_mock, asset_config, monkeypatch
-):
+def test_asset_config_from_env_artifact_fail(app_mock, asset_config, monkeypatch):
     app, http = app_mock
     app.get_config.return_value = {"directory": "app_1234"}
     asset_config.mock_types = set()

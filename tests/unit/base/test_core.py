@@ -14,9 +14,7 @@ def get_decorated_method():
 
 
 @patch("soar_asset_mocker.base.core.MockOrchestrator")
-def test_mock_scenario(
-    orchestrator, app_mock, app_config, asset_config, action_context
-):
+def test_mock_scenario(orchestrator, app_mock, app_config, asset_config, action_context):
     method = get_decorated_method()
     file_content = dump({"http": {}})
     app_config["am_mode"] = asset_config.mode
@@ -28,9 +26,7 @@ def test_mock_scenario(
 
     method(app, action_context.params)
 
-    app.save_progress.assert_called_once_with(
-        "[Asset Mocker] Mocking, used mockers: http"
-    )
+    app.save_progress.assert_called_once_with("[Asset Mocker] Mocking, used mockers: http")
     orchestrator.mock.assert_called_once_with(asset_config, action_context)
 
 

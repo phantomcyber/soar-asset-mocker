@@ -2,11 +2,7 @@ import os
 from dataclasses import dataclass
 from typing import Optional
 
-from soar_asset_mocker.base.consts import (
-    AssetMockerMode,
-    AssetMockerScope,
-    MockType,
-)
+from soar_asset_mocker.base.consts import AssetMockerMode, AssetMockerScope, MockType
 from soar_asset_mocker.connector.soar_libs import vault_info
 
 from .action_context import ActionContext
@@ -36,24 +32,16 @@ class AssetConfig:
         return "".join(self.app_name_uid.split("_")[:-1])
 
     def is_enabled(self, action: ActionContext):
-        return (
-            self.scope == AssetMockerScope.VPE and action.vpe_test_mode
-        ) or (self.scope == AssetMockerScope.ALL)
+        return (self.scope is AssetMockerScope.VPE and action.vpe_test_mode) or (self.scope is AssetMockerScope.ALL)
 
     def is_mocking(self, action: ActionContext):
-        return (
-            self.is_enabled(action)
-            and self.mode == AssetMockerMode.MOCK
-            and self.mock_file
-        )
+        return self.is_enabled(action) and self.mode is AssetMockerMode.MOCK and self.mock_file
 
     def is_recording(self, action: ActionContext):
-        return self.is_enabled(action) and self.mode == AssetMockerMode.RECORD
+        return self.is_enabled(action) and self.mode is AssetMockerMode.RECORD
 
     def is_active(self, action: ActionContext):
-        return self.is_enabled(action) and (
-            self.is_mocking(action) or self.is_recording(action)
-        )
+        return self.is_enabled(action) and (self.is_mocking(action) or self.is_recording(action))
 
     @staticmethod
     def _parse_container_id(app, input_id: str) -> Optional[int]:
@@ -63,9 +51,7 @@ class AssetConfig:
             container_id = int(input_id)
             return container_id
         except ValueError:
-            app.save_progress(
-                f"[Asset Mocker] Container ID env is not a proper integer: {input_id}"
-            )
+            app.save_progress(f"[Asset Mocker] Container ID env is not a proper integer: {input_id}")
             return None
 
     @classmethod
@@ -78,20 +64,14 @@ class AssetConfig:
     ):
         if not (vault_id or file_name or container_id):
             return ""
-        success, message, info = vault_info(
-            vault_id=vault_id, container_id=container_id, file_name=file_name
-        )
+        success, message, info = vault_info(vault_id=vault_id, container_id=container_id, file_name=file_name)
         if not success:
-            app.save_progress(
-                f"[Asset Mocker] Couldn't fetch {vault_id}, reason: {message}"
-            )
+            app.save_progress(f"[Asset Mocker] Couldn't fetch {vault_id}, reason: {message}")
             return ""
         recording_file = info[0]
         with open(recording_file["path"], "rb") as f:
             content = f.read()
-        app.save_progress(
-            f"[Asset Mocker] Loaded recording file: {recording_file['name']}"
-        )
+        app.save_progress(f"[Asset Mocker] Loaded recording file: {recording_file['name']}")
         return content
 
     @classmethod
@@ -103,12 +83,10 @@ class AssetConfig:
             cls._mock_file_from_artifact(
                 app,
                 vault_id=os.getenv("SOAR_AM_FILE_VAULT_ID", ""),
-                container_id=cls._parse_container_id(
-                    app, os.getenv("SOAR_AM_FILE_CONTAINER_ID", "")
-                ),
+                container_id=cls._parse_container_id(app, os.getenv("SOAR_AM_FILE_CONTAINER_ID", "")),
                 file_name=os.getenv("SOAR_AM_FILE_NAME", ""),
             )
-            if mode == AssetMockerMode.MOCK
+            if mode is AssetMockerMode.MOCK
             else ""
         )
         return cls(
@@ -117,18 +95,13 @@ class AssetConfig:
             mock_file=mock_file,
             mode=mode,
             scope=AssetMockerScope(os.getenv("SOAR_AM_SCOPE", "VPE")),
-            container_id=os.getenv(
-                "SOAR_AM_CONTAINER_ID", app.get_container_id()
-            ),
+            container_id=os.getenv("SOAR_AM_CONTAINER_ID", app.get_container_id()),
         )
 
     @classmethod
     def _from_app_config(cls, app):
         config = app.get_config()
-        if any(
-            field not in config
-            for field in ["am_mode", "am_file", "am_scope", "am_container_id"]
-        ):
+        if any(field not in config for field in ["am_mode", "am_file", "am_scope", "am_container_id"]):
             return None
         return cls(
             app_name_uid=config.get("directory"),
