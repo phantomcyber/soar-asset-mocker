@@ -2,9 +2,8 @@ from copy import deepcopy
 from dataclasses import dataclass
 from typing import Optional
 
-import requests
-
 from soar_asset_mocker.utils.redactor import redact_nested
+from soar_asset_mocker.connector import soar_api
 
 
 @dataclass
@@ -19,40 +18,12 @@ class ActionContext:
     playbook_name: str = ""
     name: str = ""
 
-    @staticmethod
-    def get_playbook(app, playbook_id):
-        base_url = app.get_phantom_base_url()
-        endpoint = f"{base_url}/rest/playbook/{playbook_id}"
-        r = requests.get(endpoint, verify=False)
-        if r.status_code != 200:
-            return {}
-        return r.json()
-
-    @staticmethod
-    def get_playbook_run(app, run_id):
-        base_url = app.get_phantom_base_url()
-        endpoint = f"{base_url}/rest/playbook_run/{run_id}"
-        r = requests.get(endpoint, verify=False)
-        if r.status_code != 200:
-            return {}
-        return r.json()
-
-    @staticmethod
-    def get_action_run(app, action_id):
-        base_url = app.get_phantom_base_url()
-        endpoint = f"{base_url}/rest/action_run/{action_id}"
-        print(endpoint)
-        r = requests.get(endpoint, verify=False)
-        if r.status_code != 200:
-            return {}
-        return r.json()
-
     @classmethod
     def from_action_run(cls, app, param):
-        action_run = cls.get_action_run(app, app._BaseConnector__action_run_id)
+        action_run = soar_api.get_action_run(app, app._BaseConnector__action_run_id)
         run_id = action_run.get("playbook_run")
-        playbook_run = cls.get_playbook_run(app, run_id)
-        playbook = cls.get_playbook(app, playbook_run.get("playbook"))
+        playbook_run = soar_api.get_playbook_run(app, run_id)
+        playbook = soar_api.get_playbook(app, playbook_run.get("playbook"))
         return ActionContext(
             id=app.get_action_identifier(),
             params=deepcopy(param),
