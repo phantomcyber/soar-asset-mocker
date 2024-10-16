@@ -18,7 +18,7 @@ class AssetConfig:
     scope: AssetMockerScope
 
     def description(self, action: ActionContext):
-        types_str = ",".join([t.value for t in self.mock_types])
+        types_str = " ,".join([t.value for t in self.mock_types])
         if self.is_recording(action):
             return f"Recording to container {self.container_id}, used mockers: {types_str}"
         if self.is_mocking(action):
@@ -31,7 +31,7 @@ class AssetConfig:
     def app_name(self):
         """
         SOAR APP UID contains uuid and app name, formatted as: {uuid}_{name}
-        for ex. 395196a3-b4f8-4c3d-982d-864045242adf1_splunk
+        for ex. splunk_app_395196a3-b4f8-4c3d-982d-864045242adf1
         """
         return "".join(self.app_name_uid.split("_")[:-1])
 

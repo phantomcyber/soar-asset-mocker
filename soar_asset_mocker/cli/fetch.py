@@ -10,7 +10,7 @@ from urllib3.exceptions import InsecureRequestWarning
 
 from soar_asset_mocker.utils.redactor import update_nested_dict
 
-urllib3.disable_warnings()
+urllib3.disable_warnings(InsecureRequestWarning)
 
 
 class RecordingFetcher:
@@ -41,13 +41,13 @@ class RecordingFetcher:
             self.fetch_actions(actions, recording)
         print(f"{len(playbooks)} playbooks found")
         if playbooks:
-            self.fetch_playbooks(playbooks, recording)
+            self.fetch_playbook(playbooks, recording)
         with open(output_path, "wb") as f:
             msgpack.dump(recording, f)
         print(f"Recording available at {output_path}")
 
     def fetch_actions(self, actions: list[dict], recording: dict):
-        print("\nShowing catched actions")
+        print("\nShowing caught actions")
         for i, attachment in enumerate(actions):
             meta = attachment["_pretty_metadata"]
             action_run_id = meta.get("action_run_id", 0)
@@ -55,18 +55,18 @@ class RecordingFetcher:
                 f"\t* {i} {meta['app_name']} {meta.get('action_name','unknown_action')} run id:{action_run_id} {attachment['create_time']}"
             )
         indexes = self.select_indexes()
-        print("\nDowloading action recordings")
+        print("\nDownloading action recordings")
         recording = self.download_recordings(actions, recording, indexes)
 
-    def fetch_playbooks(self, playbooks: defaultdict, recording: dict):
-        print("\nShowing catched playbooks")
+    def fetch_playbook(self, playbooks: defaultdict, recording: dict):
+        print("\nShowing caught playbooks")
         pbids = list(playbooks)
         for i, pbid in enumerate(pbids):
             print(f"\t* {i} {pbid} [{len(playbooks[pbid])} actions] {playbooks[pbid][0]['create_time']}")
         print()  # newline
         pbindex = self.select_playbook()
         if pbindex is not None:
-            print("Dowloading playbook recordings")
+            print("Downloading playbook recordings")
             recording = self.download_recordings(playbooks[pbids[pbindex]], recording)
 
     def download_recording(self, attachment):
@@ -93,13 +93,12 @@ class RecordingFetcher:
         s = Session()
         s.auth = HTTPBasicAuth(username, password)
         if not verify_ssl:
-            urllib3.disable_warnings(InsecureRequestWarning)
             s.verify = False
         return s
 
     @staticmethod
     def select_indexes():
-        index_prompt = typer.prompt("Select attachments to download, such as 1,2,3")
+        index_prompt = typer.prompt("Select attachments to download, comma-separated e.g. 1,2,3")
         return [int(i) for i in index_prompt.split(",")]
 
     @staticmethod
