@@ -80,8 +80,6 @@ def modify_code(f):
 
 def inject_am_decorator(app_py_path: Path):
     print(f"Adding decorator to {app_py_path}")
-    "from soar_asset_mocker import AssetMocker"
-    "AssetMocker.use(MockType.HTTP)"
     with open(app_py_path) as f:
         modified_code = modify_code(f)
     with open(app_py_path, "w") as f:
