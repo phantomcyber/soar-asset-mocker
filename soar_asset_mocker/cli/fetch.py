@@ -20,34 +20,28 @@ class RecordingFetcher:
         phantom_url: str,
         username: str,
         password: str,
-        verify_ssl: bool,
+        verify_ssl: bool = False,
     ) -> None:
         self.session = self.get_session(username, password, verify_ssl)
         self.url = phantom_url
 
-    @classmethod
     def fetch(
-        cls,
-        phantom_url: str,
+        self,
         container_id: int,
         output_path: str,
-        username: str,
-        password: str,
         max_attachments: int = 1000,
-        verify_ssl: bool = False,
     ):
-        fetcher = cls(phantom_url, username, password, verify_ssl)
-        actions, playbooks = fetcher.get_attachments(container_id, max_attachments)
+        actions, playbooks = self.get_attachments(container_id, max_attachments)
         if not actions and not playbooks:
             print("No attachments to preview, record some actions first")
             exit(2)
         recording: dict = {}
         print(f"{len(actions)} actions found")
         if actions:
-            fetcher.fetch_actions(actions, recording)
+            self.fetch_actions(actions, recording)
         print(f"{len(playbooks)} playbooks found")
         if playbooks:
-            fetcher.fetch_playbooks(playbooks, recording)
+            self.fetch_playbooks(playbooks, recording)
         with open(output_path, "wb") as f:
             msgpack.dump(recording, f)
         print(f"Recording available at {output_path}")
