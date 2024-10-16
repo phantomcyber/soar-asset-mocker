@@ -29,6 +29,10 @@ class AssetConfig:
 
     @property
     def app_name(self):
+        """
+        SOAR APP UID contains uuid and app name, formatted as: {uuid}_{name}
+        for ex. 395196a3-b4f8-4c3d-982d-864045242adf1_splunk
+        """
         return "".join(self.app_name_uid.split("_")[:-1])
 
     def is_enabled(self, action: ActionContext):

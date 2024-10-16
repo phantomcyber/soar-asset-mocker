@@ -4,7 +4,7 @@ from soar_asset_mocker.connector.asset_config import AssetConfig
 from soar_asset_mocker.connector.soar_libs import vault_info
 
 
-def test_asset_config_from_env(app_mock, asset_config, monkeypatch):
+def test_asset_config_from_env(app_mock, asset_config, asset_mocker_envs):
     app, http = app_mock
     app.get_config.return_value = {"directory": "app_1234"}
 
@@ -12,16 +12,11 @@ def test_asset_config_from_env(app_mock, asset_config, monkeypatch):
     asset_config.scope = "ALL"
     asset_config.mode = "RECORD"
 
-    monkeypatch.setenv("SOAR_AM_ARTIFACT_ID", "1")
-    monkeypatch.setenv("SOAR_AM_SCOPE", "ALL")
-    monkeypatch.setenv("SOAR_AM_MODE", "RECORD")
-    monkeypatch.setenv("SOAR_AM_CONTAINER_ID", "1")
-
     assert AssetConfig.from_app(app) == asset_config
 
 
 @pytest.mark.parametrize("container_id", ["", "a", "1"])
-def test_asset_config_from_env_load_artifact(container_id, app_mock, asset_config, monkeypatch, tmp_path):
+def test_asset_config_from_env_load_artifact(container_id, app_mock, asset_config, tmp_path, asset_mocker_envs_w_artifact):
     filename = "abc.msgpack"
     content = bytes(123)
     asset_config.mock_file = content
@@ -38,30 +33,24 @@ def test_asset_config_from_env_load_artifact(container_id, app_mock, asset_confi
     asset_config.mock_types = set()
     asset_config.scope = "ALL"
     asset_config.mode = "MOCK"
-    monkeypatch.setenv("SOAR_AM_FILE_NAME", "abc.msgpack")
-    monkeypatch.setenv("SOAR_AM_FILE_CONTAINER_ID", container_id)
-    monkeypatch.setenv("SOAR_AM_FILE_VAULT_ID", "abc.msgpack")
-    monkeypatch.setenv("SOAR_AM_SCOPE", "ALL")
-    monkeypatch.setenv("SOAR_AM_MODE", "MOCK")
-    monkeypatch.setenv("SOAR_AM_CONTAINER_ID", "1")
+    asset_mocker_envs_w_artifact.setenv("SOAR_AM_FILE_CONTAINER_ID", container_id)
+    asset_mocker_envs_w_artifact.setenv("SOAR_AM_MODE", "MOCK")
 
     assert AssetConfig.from_app(app) == asset_config
 
 
-def test_asset_config_from_env_no_artifact(app_mock, asset_config, monkeypatch):
+def test_asset_config_from_env_no_artifact(app_mock, asset_config, asset_mocker_envs):
     app, http = app_mock
     app.get_config.return_value = {"directory": "app_1234"}
     asset_config.mock_types = set()
     asset_config.scope = "ALL"
     asset_config.mode = "MOCK"
-    monkeypatch.setenv("SOAR_AM_SCOPE", "ALL")
-    monkeypatch.setenv("SOAR_AM_MODE", "MOCK")
-    monkeypatch.setenv("SOAR_AM_CONTAINER_ID", "1")
+    asset_mocker_envs.setenv("SOAR_AM_MODE", "MOCK")
 
     assert AssetConfig.from_app(app) == asset_config
 
 
-def test_asset_config_from_env_artifact_fail(app_mock, asset_config, monkeypatch):
+def test_asset_config_from_env_artifact_fail(app_mock, asset_config, asset_mocker_envs):
     app, http = app_mock
     app.get_config.return_value = {"directory": "app_1234"}
     asset_config.mock_types = set()
@@ -72,10 +61,7 @@ def test_asset_config_from_env_artifact_fail(app_mock, asset_config, monkeypatch
         "",
         {},
     )
-    monkeypatch.setenv("SOAR_AM_FILE_NAME", "a.msgpack")
-    monkeypatch.setenv("SOAR_AM_SCOPE", "ALL")
-    monkeypatch.setenv("SOAR_AM_MODE", "MOCK")
-    monkeypatch.setenv("SOAR_AM_CONTAINER_ID", "1")
+    asset_mocker_envs.setenv("SOAR_AM_MODE", "MOCK")
 
     assert AssetConfig.from_app(app) == asset_config
 

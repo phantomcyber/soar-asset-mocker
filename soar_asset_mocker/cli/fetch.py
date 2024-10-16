@@ -22,7 +22,7 @@ class RecordingFetcher:
         password: str,
         verify_ssl: bool,
     ) -> None:
-        self.s = self.get_session(username, password, verify_ssl)
+        self.session = self.get_session(username, password, verify_ssl)
         self.url = phantom_url
 
     @classmethod
@@ -74,10 +74,10 @@ class RecordingFetcher:
             recording = self.download_recordings(playbooks[pbids[pbindex]], recording)
 
     def download_recording(self, attachment):
-        resp = self.s.get(f"{self.url}/rest/vault_document/{attachment['vault_document']}")
+        resp = self.session.get(f"{self.url}/rest/vault_document/{attachment['vault_document']}")
         doc = resp.json()
 
-        resp = self.s.get(f"{self.url}/rest/download_attachment?vault_id={doc['hash']}")
+        resp = self.session.get(f"{self.url}/rest/download_attachment?vault_id={doc['hash']}")
         return msgpack.unpackb(resp.content)
 
     def download_recordings(
@@ -116,7 +116,7 @@ class RecordingFetcher:
 
     def get_attachments(self, container_id: int, max: int):
         print("Downloading Attachments")
-        resp = self.s.get(
+        resp = self.session.get(
             f"{self.url}/rest/container/{container_id}/attachments?sort=create_time&order=desc&page=0&page_size={max}&pretty=true",
         )
         if resp.status_code != 200:
@@ -127,7 +127,7 @@ class RecordingFetcher:
         playbooks = defaultdict(lambda: [])
         for i, a in enumerate(attachments):
             metadata = a["_pretty_metadata"]
-            if "scope" not in metadata:  # TODO Change to AM version
+            if "scope" not in metadata:  # TODO Change to Asset Mocker version
                 continue
             pb_run_id = metadata.get("playbook_run_id")
             if pb_run_id:

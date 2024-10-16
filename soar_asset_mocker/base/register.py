@@ -53,7 +53,7 @@ class MocksRegister:
             default=encode_unserializable_types,
         )
 
-    def get_mock_recordings(self, mock_type: MockType, action: ActionContext):
+    def get_mock_recordings(self, mock_type: MockType, action: ActionContext) -> list:
         return self.get_action_register(mock_type).get_recording_register(action)
 
     def append_mock_recordings(self, recording: list, mock_type: MockType, action: ActionContext):
@@ -62,12 +62,12 @@ class MocksRegister:
         ).add_recording(recording, action)
 
     @staticmethod
-    def get_filename(action: ActionContext, config: AssetConfig, suffix=""):
+    def get_filename(action: ActionContext, config: AssetConfig, suffix="") -> str:
         return f"mock_{config.app_name}_asset_{action.asset_id}_{action.name}_container_{config.container_id}_run_{action.playbook_run_id}_{time.strftime('%Y%m%d-%H%M%S')}{suffix}"
 
     @staticmethod
-    def get_name(action: ActionContext, config: AssetConfig):
-        return f"Asset Mock - {config.app_name} | {action.app_run_id}\nAsset:{action.asset_id} Container:{config.container_id}\nPb Run:{action.playbook_run_id}"
+    def get_name(action: ActionContext, config: AssetConfig) -> str:
+        return f"Asset Mock: {config.app_name}\nApp Run Id:{action.app_run_id}\nAsset:{action.asset_id} Container:{config.container_id}\nPb Run:{action.playbook_run_id}"
 
     def redact(self):
         for action_register in self.register.values():
@@ -80,14 +80,14 @@ class MocksRegister:
             self.export_to_file(),
             container_id=config.container_id,
             file_name=file_name,
-            metadata=self.create_metadata(action, config),
+            metadata=self._create_metadata(action, config),
         )
         if attach_resp.get("succeeded"):
             app.save_artifact(self._create_artifact(name, file_name, attach_resp, config.container_id))
         else:
             raise ValueError(attach_resp)
 
-    def _create_artifact(self, name, filename, attach_resp, container_id):
+    def _create_artifact(self, name, filename, attach_resp, container_id) -> dict:
         return {
             "name": name,
             "container_id": container_id,
@@ -101,7 +101,7 @@ class MocksRegister:
             "source_data_identifier": None,
         }
 
-    def create_metadata(self, action: ActionContext, config: AssetConfig):
+    def _create_metadata(self, action: ActionContext, config: AssetConfig) -> dict:
         return {
             "playbook_run_id": action.playbook_run_id,
             "action_run_id": action.action_run_id,

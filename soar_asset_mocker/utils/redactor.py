@@ -3,7 +3,6 @@ import json
 FIELDS_TO_REDACT = [
     "authorization",
     "bearer",
-    "confirm_password",
     "key",
     "originalTo",
     "originalFrom",
@@ -11,7 +10,6 @@ FIELDS_TO_REDACT = [
     "reporter",
     "secret",
     "token",
-    "user_session_token",
 ]
 
 REDACTED = "*ASSET_MOCKER_REDACTED*"

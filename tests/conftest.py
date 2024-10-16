@@ -7,6 +7,19 @@ from soar_asset_mocker.base.register import MocksRegister
 from soar_asset_mocker.connector.action_context import ActionContext
 from soar_asset_mocker.connector.asset_config import AssetConfig
 
+@pytest.fixture()
+def asset_mocker_envs(monkeypatch):
+    monkeypatch.setenv("SOAR_AM_SCOPE", "ALL")
+    monkeypatch.setenv("SOAR_AM_MODE", "RECORD")
+    monkeypatch.setenv("SOAR_AM_CONTAINER_ID", "1")
+    return monkeypatch
+
+@pytest.fixture()
+def asset_mocker_envs_w_artifact(asset_mocker_envs):
+    asset_mocker_envs.setenv("SOAR_AM_ARTIFACT_ID", "1")
+    asset_mocker_envs.setenv("SOAR_AM_FILE_NAME", "abc.msgpack")
+    asset_mocker_envs.setenv("SOAR_AM_FILE_VAULT_ID", "abc.msgpack")
+    return asset_mocker_envs
 
 @pytest.fixture(name="mock_register")
 def http_mock_register():

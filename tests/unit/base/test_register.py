@@ -64,7 +64,7 @@ def test_export_to_vault(asset_config, action_context, mock_register):
 
     app.save_artifact.assert_called_once_with(
         {
-            "name": f"Asset Mock - {asset_config.app_name} | {action_context.app_run_id}\nAsset:{action_context.asset_id} Container:{asset_config.container_id}\nPb Run:{action_context.playbook_run_id}",
+            "name": f"Asset Mock: {asset_config.app_name}\nApp Run Id:{action_context.app_run_id}\nAsset:{action_context.asset_id} Container:{asset_config.container_id}\nPb Run:{action_context.playbook_run_id}",
             "container_id": "1",
             "cef": {
                 "vaultId": "123",

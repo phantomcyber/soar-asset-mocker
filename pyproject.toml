@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "soar-asset-mocker"
 version = "0.1.0"
-description = "Asset Mocker enhances SOAR Connectors with ability to record and replay all external commnication, allowing for faster playbook development"
+description = "Asset Mocker enhances SOAR Connectors with ability to record and replay all HTTP communication done on Python socket level, allowing for faster playbook development"
 authors = ["Michał Posłuszny <mposluszny@splunk.com>"]
 readme = "README.md"
 packages = [{include = "soar_asset_mocker"}]
@@ -37,13 +37,13 @@ in-project = true
 
 [tool.black]
 target-version = ['py39']
-line-length = 145
+line-length = 120
 
 [tool.isort]
 profile = "black"
 py_version=39
 multi_line_output = 3
-line_length = 145
+line_length = 120
 
 [tool.coverage.report]
 omit = [

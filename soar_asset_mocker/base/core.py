@@ -40,7 +40,7 @@ class AssetMocker:
             yield
 
     def _wrap_core(self, handle):
-        @wraps
+        @wraps(handle)
         def wrapper(app, param):
             try:
                 action = ActionContext.from_action_run(app, param)
