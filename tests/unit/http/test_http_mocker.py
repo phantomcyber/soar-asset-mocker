@@ -21,7 +21,7 @@ def test_http_record_and_mock(http_url_expect_text, action_context):
 
     recordings = register.get_mock_recordings(MockType.HTTP, action_context)
 
-    assert len(recordings) > 0
+    assert len(recordings) == 1
 
     assert list(recordings[0].keys()) == ["request", "response"]
 
