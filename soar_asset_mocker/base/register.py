@@ -30,7 +30,9 @@ class ActionRegister:
 
 @dataclass
 class MocksRegister:
-    register: dict[str, ActionRegister] = field(default_factory=lambda: {mock_type.value: ActionRegister() for mock_type in MockType})
+    register: dict[str, ActionRegister] = field(
+        default_factory=lambda: {mock_type.value: ActionRegister() for mock_type in MockType}
+    )
 
     def get_action_register(self, mock_type: MockType) -> ActionRegister:
         # this can be done with defaultdict, but this state is going to be extracted, so we should be able to represent it with simple dict

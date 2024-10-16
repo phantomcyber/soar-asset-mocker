@@ -1,6 +1,6 @@
 import pytest
 
-from soar_asset_mocker.utils.redactor import redact_nested, redact_string, REDACTED
+from soar_asset_mocker.utils.redactor import REDACTED, redact_nested, redact_string
 
 
 @pytest.mark.parametrize(

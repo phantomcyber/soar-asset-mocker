@@ -57,7 +57,9 @@ class RecordingFetcher:
         for i, attachment in enumerate(actions):
             meta = attachment["_pretty_metadata"]
             action_run_id = meta.get("action_run_id", 0)
-            print(f"\t* {i} {meta['app_name']} {meta.get('action_name','unknown_action')} run id:{action_run_id} {attachment['create_time']}")
+            print(
+                f"\t* {i} {meta['app_name']} {meta.get('action_name','unknown_action')} run id:{action_run_id} {attachment['create_time']}"
+            )
         indexes = self.select_indexes()
         print("\nDowloading action recordings")
         recording = self.download_recordings(actions, recording, indexes)

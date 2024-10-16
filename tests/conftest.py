@@ -7,12 +7,14 @@ from soar_asset_mocker.base.register import MocksRegister
 from soar_asset_mocker.connector.action_context import ActionContext
 from soar_asset_mocker.connector.asset_config import AssetConfig
 
+
 @pytest.fixture()
 def asset_mocker_envs(monkeypatch):
     monkeypatch.setenv("SOAR_AM_SCOPE", "ALL")
     monkeypatch.setenv("SOAR_AM_MODE", "RECORD")
     monkeypatch.setenv("SOAR_AM_CONTAINER_ID", "1")
     return monkeypatch
+
 
 @pytest.fixture()
 def asset_mocker_envs_w_artifact(asset_mocker_envs):
@@ -21,9 +23,12 @@ def asset_mocker_envs_w_artifact(asset_mocker_envs):
     asset_mocker_envs.setenv("SOAR_AM_FILE_VAULT_ID", "abc.msgpack")
     return asset_mocker_envs
 
+
 @pytest.fixture(name="mock_register")
 def http_mock_register():
-    return MocksRegister.from_dict({"register": {MockType.HTTP.value: {"actions": {"action_id_1": {"param_1": [1, 2, 3]}}}}})
+    return MocksRegister.from_dict(
+        {"register": {MockType.HTTP.value: {"actions": {"action_id_1": {"param_1": [1, 2, 3]}}}}}
+    )
 
 
 @pytest.fixture
@@ -92,8 +97,12 @@ def app_mock(httpserver, asset_config, action_context):
     app.get_app_run_id = MagicMock(return_value=action_context.app_run_id)
     app.get_asset_id = MagicMock(return_value=action_context.asset_id)
     app.get_phantom_base_url = MagicMock(return_value=httpserver.url_for(""))
-    httpserver.expect_request("/rest/action_run/action_run_id").respond_with_json({"id": "action_run_id", "playbook_run": "pb_run_id"})
-    httpserver.expect_request("/rest/playbook_run/pb_run_id").respond_with_json({"playbook": "pb_id", "test_mode": False})
+    httpserver.expect_request("/rest/action_run/action_run_id").respond_with_json(
+        {"id": "action_run_id", "playbook_run": "pb_run_id"}
+    )
+    httpserver.expect_request("/rest/playbook_run/pb_run_id").respond_with_json(
+        {"playbook": "pb_id", "test_mode": False}
+    )
     httpserver.expect_request("/rest/playbook/pb_id").respond_with_json({})
     app.get_action_name = MagicMock(return_value=action_context.name)
     return app, httpserver
