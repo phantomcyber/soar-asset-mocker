@@ -23,7 +23,7 @@ def test_http_record_and_mock(http_url_expect_text, action_context):
 
     assert len(recordings) == 1
 
-    assert list(recordings[0].keys()) == ["request", "response"]
+    assert list(recordings[0]) == ["request", "response"]
 
     with HTTPMocker().mock(register, action_context):
         assert http_call(url) == expected_text
