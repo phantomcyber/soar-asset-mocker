@@ -27,6 +27,7 @@ def export_requirements_to_string():
 
     exporter.export("requirements.txt", Path.cwd(), io)
     requirements = ""
+    # Poetry generate `requirements.txt` file that contains specification of Python version after semicolon, as connectors are bound to specific version it is not relevant here.
     for line in out.fetch().splitlines():
         requirements += line[: line.find(";")] + "\n"
     return requirements
