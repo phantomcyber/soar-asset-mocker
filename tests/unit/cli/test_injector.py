@@ -18,7 +18,7 @@ def test_update_dependencies(tmp_path):
     with open(requirements_path, "r") as f:
         requirements_lines = f.readlines()
 
-    for line in [*app_requirements, "#Asset Mocker Dependencies\n", "msgpack==1.1.0 \n"]:
+    for line in [*app_requirements, "#Asset Mocker Dependencies\n", "msgpack==1.1.0\n"]:
         assert line in requirements_lines
 
 

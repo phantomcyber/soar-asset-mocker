@@ -24,8 +24,6 @@ from phantom.base_connector import BaseConnector
 
 
 class ExampleConnector(BaseConnector):
-    def __init__(self):
-        super().__init__()
 
     def _test_connectivity(self, param):
         """Test connectivity"""

@@ -26,8 +26,6 @@ from soar_asset_mocker import AssetMocker, MockType
 
 
 class ExampleConnector(BaseConnector):
-    def __init__(self):
-        super().__init__()
 
     def _test_connectivity(self, param):
         """Test connectivity"""

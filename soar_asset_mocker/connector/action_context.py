@@ -2,8 +2,8 @@ from copy import deepcopy
 from dataclasses import dataclass
 from typing import Optional
 
-from soar_asset_mocker.utils.redactor import redact_nested
 from soar_asset_mocker.connector import soar_api
+from soar_asset_mocker.utils.redactor import redact_nested
 
 
 @dataclass
@@ -38,4 +38,4 @@ class ActionContext:
 
     @property
     def params_key(self):
-        return str(sorted([str(value) for key, value in redact_nested(self.params).items() if key != "context"]))
+        return str(sorted(str(value) for key, value in redact_nested(self.params).items() if key != "context"))

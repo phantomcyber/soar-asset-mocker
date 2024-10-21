@@ -18,7 +18,7 @@ class AssetConfig:
     scope: AssetMockerScope
 
     def description(self, action: ActionContext):
-        types_str = " ,".join([t.value for t in self.mock_types])
+        types_str = " ,".join(t.value for t in self.mock_types)
         if self.is_recording(action):
             return f"Recording to container {self.container_id}, used mockers: {types_str}"
         if self.is_mocking(action):
@@ -105,7 +105,7 @@ class AssetConfig:
     @classmethod
     def _from_app_config(cls, app):
         config = app.get_config()
-        if any(field not in config for field in ["am_mode", "am_file", "am_scope", "am_container_id"]):
+        if any(field not in config for field in ("am_mode", "am_file", "am_scope", "am_container_id")):
             return None
         return cls(
             app_name_uid=config.get("directory"),

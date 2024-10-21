@@ -8,7 +8,7 @@ from soar_asset_mocker.base.register import MocksRegister
 from soar_asset_mocker.connector import soar_libs
 
 
-def test_register_add_entries(mock_register, action_context, asset_config):
+def test_register_add_entries(mock_register, action_context):
     mock_type = MockType.HTTP
 
     mock_register.append_mock_recordings([1, 2, 3], mock_type, action_context)
@@ -28,7 +28,7 @@ def test_register_add_entries(mock_register, action_context, asset_config):
     ]
 
 
-def test_register_get_entries(mock_register, action_context, asset_config):
+def test_register_get_entries(mock_register, action_context):
     mock_type = MockType.HTTP
     assert mock_register.get_mock_recordings(mock_type, action_context) == []
     mock_register.append_mock_recordings([1, 2, 3], mock_type, action_context)
@@ -44,10 +44,10 @@ def test_register_get_entries(mock_register, action_context, asset_config):
     ]
 
 
-def test_export_to_file(mock_register, tmp_path):
+def test_export_to_file(mock_register):
     mock_register.export_to_file()
-    nreg = MocksRegister.from_file(mock_register.export_to_file())
-    assert nreg == mock_register
+    register_from_file = MocksRegister.from_file(mock_register.export_to_file())
+    assert register_from_file == mock_register
 
 
 def test_export_to_vault(asset_config, action_context, mock_register):
