@@ -27,9 +27,8 @@ def export_requirements_to_string():
 
     exporter.export("requirements.txt", Path.cwd(), io)
     requirements = ""
-    # Poetry generate `requirements.txt` file that contains specification of Python version after semicolon, as connectors are bound to specific version it is not relevant here.
     for line in out.fetch().splitlines():
-        requirements += line[: line.find(" ;")] + "\n"
+        requirements += f"{line}\n"
     return requirements
 
 
@@ -66,7 +65,7 @@ def modify_code(f):
         # search for import part of the code to append import_line
         # if it wasn't appended yet.
         if not import_added and (line.startswith("import ") or line.startswith("from ")):
-            modified_code += import_line
+            modified_code += f"{import_line}"
             import_added = True
 
         # search for `handle_action` method in connector code
