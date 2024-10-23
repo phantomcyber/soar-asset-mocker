@@ -1,7 +1,7 @@
-name: Tests
+name: CI
 on: [push, pull_request]
 jobs:
-  lint:
+  tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -26,3 +26,7 @@ jobs:
         with:
           name: coverage-report
           path: coverage.xml
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+     - uses: 'phantomcyber/dev-cicd-tools/github-actions/lint@main'
