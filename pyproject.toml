@@ -39,6 +39,7 @@ in-project = true
 [tool.black]
 target-version = ['py39']
 line-length = 120
+verbose = true
 
 [tool.isort]
 profile = "black"
