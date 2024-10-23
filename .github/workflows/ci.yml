@@ -1,7 +1,7 @@
 name: CI
 on: [push, pull_request]
 jobs:
-  tests:
+  Tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -15,7 +15,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pytest-cov
+          pip install poetry
+          poetry install
 
       - name: Run tests with coverage
         run: |
@@ -26,7 +27,7 @@ jobs:
         with:
           name: coverage-report
           path: coverage.xml
-  lint:
+  Lint:
     runs-on: ubuntu-latest
     steps:
      - uses: 'phantomcyber/dev-cicd-tools/github-actions/lint@main'
