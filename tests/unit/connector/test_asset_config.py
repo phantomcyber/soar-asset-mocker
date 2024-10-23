@@ -16,9 +16,7 @@ def test_asset_config_from_env(app_mock, asset_config, asset_mocker_envs):
 
 
 @pytest.mark.parametrize("container_id", ["", "a", "1"])
-def test_asset_config_from_env_load_artifact(
-    container_id, app_mock, asset_config, tmp_path, asset_mocker_envs_w_artifact
-):
+def test_asset_config_from_env_load_artifact(container_id, app_mock, asset_config, tmp_path, asset_mocker_envs_w_artifact):
     filename = "abc.msgpack"
     content = bytes(123)
     asset_config.mock_file = content

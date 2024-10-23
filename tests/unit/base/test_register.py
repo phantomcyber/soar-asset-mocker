@@ -96,9 +96,7 @@ def test_export_to_vault_fails(asset_config, action_context, mock_register):
 
 
 def test_serialize_register():
-    content = {
-        MockType.HTTP: {"actions": {"action_id_1": {"param_1": [{"name": "john", "password": BytesIO(bytes(123))}]}}}
-    }
+    content = {MockType.HTTP: {"actions": {"action_id_1": {"param_1": [{"name": "john", "password": BytesIO(bytes(123))}]}}}}
 
     reg = MocksRegister.from_dict(content.copy())
     binary = reg.export_to_file()
