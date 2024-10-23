@@ -60,6 +60,7 @@ jobs:
           run: |
             python -m pip install --upgrade pip
             pip install --upgrade coverage[toml]
+            mv coverage-data .coverage
             ls -la
 
             coverage html --skip-covered --skip-empty
