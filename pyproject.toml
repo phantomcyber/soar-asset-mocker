@@ -29,6 +29,7 @@ types-PyYAML = "^6.0.12"
 pytest-httpserver = "^1.1.0"
 pytest-cov = "^5.0.0"
 urllib3 = "1.26.19"
+ruff = "^0.7.1"
 
 [build-system]
 requires = ["poetry-core"]
