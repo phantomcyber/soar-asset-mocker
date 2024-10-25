@@ -53,8 +53,8 @@ class RecordingFetcher:
             action_run_id = meta.get("action_run_id", 0)
             print(
                 (
-                    f"\t* {i} {meta['app_name']} {meta.get('action_name','unknown_action')}",
-                    f"run id:{action_run_id} {attachment['create_time']}",
+                    f"\t* {i} {meta['app_name']} {meta.get('action_name','unknown_action')}"
+                    f"run id:{action_run_id} {attachment['create_time']}"
                 )
             )
         indexes = self.select_indexes()
@@ -116,8 +116,8 @@ class RecordingFetcher:
         print("Downloading Attachments")
         resp = self.session.get(
             (
-                f"{self.url}/rest/container/{container_id}/attachments",
-                f"?sort=create_time&order=desc&page=0&page_size={max}&pretty=true",
+                f"{self.url}/rest/container/{container_id}/attachments"
+                f"?sort=create_time&order=desc&page=0&page_size={max}&pretty=true"
             )
         )
         if resp.status_code != 200:
