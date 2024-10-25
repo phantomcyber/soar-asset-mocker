@@ -51,7 +51,12 @@ class RecordingFetcher:
         for i, attachment in enumerate(actions):
             meta = attachment["_pretty_metadata"]
             action_run_id = meta.get("action_run_id", 0)
-            print(f"\t* {i} {meta['app_name']} {meta.get('action_name','unknown_action')} run id:{action_run_id} {attachment['create_time']}")
+            print(
+                (
+                    f"\t* {i} {meta['app_name']} {meta.get('action_name','unknown_action')}",
+                    f"run id:{action_run_id} {attachment['create_time']}",
+                )
+            )
         indexes = self.select_indexes()
         print("\nDownloading action recordings")
         recording = self.download_recordings(actions, recording, indexes)
@@ -110,7 +115,10 @@ class RecordingFetcher:
     def get_attachments(self, container_id: int, max: int):
         print("Downloading Attachments")
         resp = self.session.get(
-            f"{self.url}/rest/container/{container_id}/attachments?sort=create_time&order=desc&page=0&page_size={max}&pretty=true",
+            (
+                f"{self.url}/rest/container/{container_id}/attachments",
+                f"?sort=create_time&order=desc&page=0&page_size={max}&pretty=true",
+            )
         )
         if resp.status_code != 200:
             print("Something went wrong:", resp.status_code, resp.text)
