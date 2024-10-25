@@ -23,6 +23,7 @@ class AssetConfig:
             return f"Recording to container {self.container_id}, used mockers: {types_str}"
         if self.is_mocking(action):
             return f"Mocking, used mockers: {types_str}"
+        return "Asset Mocker unused"
 
     def summary(self, action: ActionContext):
         return {"Asset Mocker": self.description(action)}
@@ -52,8 +53,7 @@ class AssetConfig:
         if not input_id:
             return None
         try:
-            container_id = int(input_id)
-            return container_id
+            return int(input_id)
         except ValueError:
             app.save_progress(f"[Asset Mocker] Container ID env is not a proper integer: {input_id}")
             return None

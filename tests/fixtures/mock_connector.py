@@ -53,4 +53,4 @@ class ConnectorMock:
         return self.config
 
     def debug_print(self, *args, **kwargs):
-        print(*args, **kwargs)
+        print(*args, **kwargs)  # noqa allow for this print in case of mocking

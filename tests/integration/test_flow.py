@@ -49,8 +49,3 @@ def test_record_and_mock_with_envs(http_url_expect_text, asset_mocker_envs):
     connector.config["am_file"] = holder.attachments[0]
 
     assert connector.example_connector_action({"url": url}) == expected_text
-
-
-def test_mock_without_recording():
-    # TODO
-    ...

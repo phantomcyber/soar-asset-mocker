@@ -5,6 +5,7 @@ import msgpack
 from dacite import from_dict
 
 from soar_asset_mocker.base.consts import MockType
+from soar_asset_mocker.base.exceptions import VaultExportError
 from soar_asset_mocker.base.serializers import decode_unserializable_types, encode_unserializable_types
 from soar_asset_mocker.connector.action_context import ActionContext
 from soar_asset_mocker.connector.asset_config import AssetConfig
@@ -100,7 +101,7 @@ class MocksRegister:
         if attach_resp.get("succeeded"):
             app.save_artifact(self._create_artifact(name, file_name, attach_resp, config.container_id))
         else:
-            raise ValueError(attach_resp)
+            raise VaultExportError(attach_resp)
 
     def _create_artifact(self, name, filename, attach_resp, container_id) -> dict:
         return {
