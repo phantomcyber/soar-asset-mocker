@@ -55,7 +55,7 @@ select = ["F", "E", "W","A", "UP",  "B",  "C4",  "RET", "SIM",  "RUF", "PLC", "P
 profile = "black"
 py_version=39
 multi_line_output = 3
-line_length = 145
+line_length = 120
 
 [tool.coverage.report]
 omit = [
