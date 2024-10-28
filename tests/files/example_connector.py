@@ -111,12 +111,12 @@ if __name__ == "__main__":
             r = requests.get(login_url, verify=verify)
             csrftoken = r.cookies["csrftoken"]
 
-            data = dict()
+            data = {}
             data["username"] = username
             data["password"] = password
             data["csrfmiddlewaretoken"] = csrftoken
 
-            headers = dict()
+            headers = {}
             headers["Cookie"] = "csrftoken=" + csrftoken
             headers["Referer"] = login_url
 

@@ -35,6 +35,6 @@ def test_http_mock_without_recording(http_url_expect_text, action_context):
 
     def mocking_without_recording():
         with HTTPMocker().mock(register, action_context):
-            http_call(url) == expected_text
+            assert http_call(url) == expected_text
 
     pytest.raises(MissingRecordingException, mocking_without_recording)

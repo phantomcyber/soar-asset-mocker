@@ -24,7 +24,7 @@ class HTTPMocker(Mocker):
         register: MocksRegister,
         action: ActionContext,
     ):
-        # TODO Add recording/mocking modes to Asset Mocker configuration
+        # TODO: Add recording/mocking modes to Asset Mocker configuration
         vcr = VCR(
             record_mode="none",
             filter_headers=FIELDS_TO_REDACT_PAIRS,
@@ -36,8 +36,8 @@ class HTTPMocker(Mocker):
         with vcr.use_cassette(self.mock_type.value):
             try:
                 yield
-            except CannotOverwriteExistingCassetteException:
-                raise MissingRecordingException
+            except CannotOverwriteExistingCassetteException as e:
+                raise MissingRecordingException from e
 
     @contextmanager
     def record(

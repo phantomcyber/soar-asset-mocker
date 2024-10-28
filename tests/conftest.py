@@ -8,7 +8,7 @@ from soar_asset_mocker.connector.action_context import ActionContext
 from soar_asset_mocker.connector.asset_config import AssetConfig
 
 
-@pytest.fixture()
+@pytest.fixture
 def asset_mocker_envs(monkeypatch):
     monkeypatch.setenv("SOAR_AM_SCOPE", "ALL")
     monkeypatch.setenv("SOAR_AM_MODE", "RECORD")
@@ -16,7 +16,7 @@ def asset_mocker_envs(monkeypatch):
     return monkeypatch
 
 
-@pytest.fixture()
+@pytest.fixture
 def asset_mocker_envs_w_artifact(asset_mocker_envs):
     asset_mocker_envs.setenv("SOAR_AM_ARTIFACT_ID", "1")
     asset_mocker_envs.setenv("SOAR_AM_FILE_NAME", "abc.msgpack")
@@ -53,7 +53,7 @@ def action_context():
 
 
 @pytest.fixture
-def asset_config(action_context):
+def asset_config():
     return AssetConfig(
         app_name_uid="app_1234",
         mode="MOCK",
@@ -67,7 +67,7 @@ def asset_config(action_context):
 @pytest.fixture
 def app_config(
     directory="app_1234",
-    mock_types=[],
+    mock_types=(),
     mode="NONE",
     file_content="",
     container_id="1",

@@ -1,7 +1,9 @@
 from collections import defaultdict
-from typing import Optional, Sequence
+from collections.abc import Sequence
+from typing import Optional
 
 import msgpack
+import rich
 import typer
 import urllib3
 from requests import Session
@@ -33,40 +35,41 @@ class RecordingFetcher:
     ):
         actions, playbooks = self.get_attachments(container_id, max_attachments)
         if not actions and not playbooks:
-            print("No attachments to preview, record some actions first")
+            rich.print("No attachments to preview, record some actions first")
             exit(2)
         recording: dict = {}
-        print(f"{len(actions)} actions found")
+        rich.print(f"{len(actions)} actions found")
         if actions:
             self.fetch_actions(actions, recording)
-        print(f"{len(playbooks)} playbooks found")
+        rich.print(f"{len(playbooks)} playbooks found")
         if playbooks:
             self.fetch_playbook(playbooks, recording)
         with open(output_path, "wb") as f:
             msgpack.dump(recording, f)
-        print(f"Recording available at {output_path}")
+        rich.print(f"Recording available at {output_path}")
 
     def fetch_actions(self, actions: list[dict], recording: dict):
-        print("\nShowing caught actions")
+        rich.print("\nShowing caught actions")
         for i, attachment in enumerate(actions):
             meta = attachment["_pretty_metadata"]
             action_run_id = meta.get("action_run_id", 0)
-            print(
-                f"\t* {i} {meta['app_name']} {meta.get('action_name','unknown_action')} run id:{action_run_id} {attachment['create_time']}"
+            rich.print(
+                f"\t* {i} {meta['app_name']} {meta.get('action_name','unknown_action')}"
+                f"run id:{action_run_id} {attachment['create_time']}"
             )
         indexes = self.select_indexes()
-        print("\nDownloading action recordings")
+        rich.print("\nDownloading action recordings")
         recording = self.download_recordings(actions, recording, indexes)
 
     def fetch_playbook(self, playbooks: defaultdict, recording: dict):
-        print("\nShowing caught playbooks")
+        rich.print("\nShowing caught playbooks")
         pbids = list(playbooks)
         for i, pbid in enumerate(pbids):
-            print(f"\t* {i} {pbid} [{len(playbooks[pbid])} actions] {playbooks[pbid][0]['create_time']}")
-        print()  # newline
+            rich.print(f"\t* {i} {pbid} [{len(playbooks[pbid])} actions] {playbooks[pbid][0]['create_time']}")
+        rich.print()  # newline
         pbindex = self.select_playbook()
         if pbindex is not None:
-            print("Downloading playbook recordings")
+            rich.print("Downloading playbook recordings")
             recording = self.download_recordings(playbooks[pbids[pbindex]], recording)
 
     def download_recording(self, attachment):
@@ -85,7 +88,7 @@ class RecordingFetcher:
         if not indexes:
             indexes = range(len(attachments))
         for i in indexes:
-            print(i, attachments[i]["name"])
+            rich.print(i, attachments[i]["name"])
             update_nested_dict(recording_pack, self.download_recording(attachments[i]))
 
     @staticmethod
@@ -109,18 +112,19 @@ class RecordingFetcher:
         except ValueError:
             return None
 
-    def get_attachments(self, container_id: int, max: int):
-        print("Downloading Attachments")
+    def get_attachments(self, container_id: int, max_attachments: int):
+        rich.print("Downloading Attachments")
         resp = self.session.get(
-            f"{self.url}/rest/container/{container_id}/attachments?sort=create_time&order=desc&page=0&page_size={max}&pretty=true",
+            f"{self.url}/rest/container/{container_id}/attachments"
+            f"?sort=create_time&order=desc&page=0&page_size={max_attachments}&pretty=true"
         )
         if resp.status_code != 200:
-            print("Something went wrong:", resp.status_code, resp.text)
+            rich.print("Something went wrong:", resp.status_code, resp.text)
             exit(1)
         attachments = resp.json().get("data", [])
         actions = []
         playbooks = defaultdict(lambda: [])
-        for i, a in enumerate(attachments):
+        for a in attachments:
             metadata = a["_pretty_metadata"]
             if "scope" not in metadata:  # TODO Change to Asset Mocker version
                 continue

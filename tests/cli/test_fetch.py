@@ -8,7 +8,7 @@ runner = CliRunner()
 
 def test_fetch(tmp_path, httpserver):
     container_id = "1"
-    hash = "1234"
+    hash_value = "1234"
     vault_doc = "1234"
     path = str(tmp_path / "tmp.yaml")
     httpserver.expect_request(
@@ -52,9 +52,9 @@ def test_fetch(tmp_path, httpserver):
             ]
         }
     )
-    httpserver.expect_request(f"/rest/vault_document/{vault_doc}").respond_with_json({"hash": hash})
-    httpserver.expect_request("/rest/download_attachment", query_string=f"vault_id={hash}").respond_with_data(
-        msgpack.packb({"register": [{"request": {"hash": hash}}]})
+    httpserver.expect_request(f"/rest/vault_document/{vault_doc}").respond_with_json({"hash": hash_value})
+    httpserver.expect_request("/rest/download_attachment", query_string=f"vault_id={hash_value}").respond_with_data(
+        msgpack.packb({"register": [{"request": {"hash": hash_value}}]})
     )
 
     result = runner.invoke(
@@ -72,9 +72,9 @@ def test_fetch(tmp_path, httpserver):
     with open(path, "rb") as f:
         assert msgpack.unpackb(f.read()) == {
             "register": [
-                {"request": {"hash": hash}},
-                {"request": {"hash": hash}},
-                {"request": {"hash": hash}},
+                {"request": {"hash": hash_value}},
+                {"request": {"hash": hash_value}},
+                {"request": {"hash": hash_value}},
             ]
         }
 

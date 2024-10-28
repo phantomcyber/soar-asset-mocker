@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from contextlib import contextmanager
 
 from soar_asset_mocker.base.consts import MockType
@@ -12,6 +12,7 @@ class Mocker(ABC):
         self.mock_type = mock_type
         self.record_buffer: dict = {}
 
+    @abstractmethod
     @contextmanager
     def mock(
         self,
@@ -20,6 +21,7 @@ class Mocker(ABC):
     ):
         raise NotImplementedError
 
+    @abstractmethod
     @contextmanager
     def record(
         self,
