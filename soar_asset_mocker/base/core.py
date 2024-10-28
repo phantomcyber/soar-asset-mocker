@@ -49,7 +49,8 @@ class AssetMocker:
                     out = handle(app, param)
                 if config.is_active(action):
                     results = app.get_action_results()
-                    results[-1].update_summary(config.summary(action))
+                    if results:
+                        results[-1].update_summary(config.summary(action))
                 return out
             except Exception as e:
                 import traceback
