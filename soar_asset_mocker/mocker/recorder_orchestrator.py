@@ -1,4 +1,5 @@
 from contextlib import ExitStack, contextmanager
+from typing import ClassVar
 
 from soar_asset_mocker.base.consts import MockType
 from soar_asset_mocker.base.register import MocksRegister
@@ -8,14 +9,14 @@ from soar_asset_mocker.mocker.mocker import Mocker
 
 
 class RecordOrchestrator:
-    _MAPPING = {MockType.HTTP: HTTPMocker}
+    _MAPPING: ClassVar = {MockType.HTTP: HTTPMocker}
 
     @classmethod
     def recorders_from_config(cls, config: AssetConfig) -> list[Mocker]:
         try:
             return [cls._MAPPING[mock_type]() for mock_type in config.mock_types]
-        except KeyError:
-            raise KeyError(f"Unsupported mock types provided {config.mock_types}")
+        except KeyError as e:
+            raise KeyError(f"Unsupported mock types provided {config.mock_types}") from e
 
     @classmethod
     @contextmanager

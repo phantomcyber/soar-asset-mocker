@@ -5,6 +5,7 @@ import msgpack
 from dacite import from_dict
 
 from soar_asset_mocker.base.consts import MockType
+from soar_asset_mocker.base.exceptions import VaultExportError
 from soar_asset_mocker.base.serializers import decode_unserializable_types, encode_unserializable_types
 from soar_asset_mocker.connector.action_context import ActionContext
 from soar_asset_mocker.connector.asset_config import AssetConfig
@@ -35,7 +36,8 @@ class MocksRegister:
     )
 
     def get_action_register(self, mock_type: MockType) -> ActionRegister:
-        # this can be done with defaultdict, but this state is going to be extracted, so we should be able to represent it with simple dict
+        # this can be done with defaultdict, but this state is going to be extracted,
+        # so we should be able to represent it with a simple dict
         self.register.setdefault(mock_type.value, ActionRegister())
         return self.register[mock_type.value]
 
@@ -65,11 +67,23 @@ class MocksRegister:
 
     @staticmethod
     def get_filename(action: ActionContext, config: AssetConfig, suffix="") -> str:
-        return f"mock_{config.app_name}_asset_{action.asset_id}_{action.name}_container_{config.container_id}_run_{action.playbook_run_id}_{time.strftime('%Y%m%d-%H%M%S')}{suffix}"
+        return (
+            f"mock_{config.app_name}"
+            f"_asset_{action.asset_id}_{action.name}"
+            f"_container_{config.container_id}"
+            f"_run_{action.playbook_run_id}"
+            f"_{time.strftime('%Y%m%d-%H%M%S')}{suffix}"
+        )
 
     @staticmethod
     def get_name(action: ActionContext, config: AssetConfig) -> str:
-        return f"Asset Mock: {config.app_name}\nApp Run Id:{action.app_run_id}\nAsset:{action.asset_id} Container:{config.container_id}\nPb Run:{action.playbook_run_id}"
+        return (
+            f"Asset Mock: {config.app_name}\n"
+            f"App Run Id:{action.app_run_id}\n"
+            f"Asset:{action.asset_id}\n"
+            f"Container:{config.container_id}\n"
+            f"Pb Run:{action.playbook_run_id}"
+        )
 
     def redact(self):
         for action_register in self.register.values():
@@ -87,7 +101,7 @@ class MocksRegister:
         if attach_resp.get("succeeded"):
             app.save_artifact(self._create_artifact(name, file_name, attach_resp, config.container_id))
         else:
-            raise ValueError(attach_resp)
+            raise VaultExportError(attach_resp)
 
     def _create_artifact(self, name, filename, attach_resp, container_id) -> dict:
         return {

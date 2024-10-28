@@ -3,6 +3,7 @@ import shutil
 from pathlib import Path
 
 import isort
+import rich
 from cleo.io.inputs.input import Input
 from cleo.io.io import IO
 from cleo.io.outputs.buffered_output import BufferedOutput
@@ -34,15 +35,15 @@ def export_requirements_to_string():
 
 def add_am_lib(app_dir: Path):
     # TODO change to requirements.txt modification after pypi release
-    print(f"Copying {repo_path()} to {app_dir}")
+    rich.print(f"Copying {repo_path()} to {app_dir}")
     shutil.rmtree(app_dir / "soar_asset_mocker", ignore_errors=True)
     shutil.copytree(repo_path(), app_dir / "soar_asset_mocker")
 
 
 def update_dependencies(requirements_path: Path):
-    print("Updating requirements.txt")
+    rich.print("Updating requirements.txt")
     mocker_reqs = f"\n#Asset Mocker Dependencies\n{export_requirements_to_string()}"
-    with open(requirements_path, "r") as f:
+    with open(requirements_path) as f:
         reqs = f.read()
     if mocker_reqs in reqs:
         return
@@ -78,7 +79,7 @@ def modify_code(f):
 
 
 def inject_am_decorator(app_py_path: Path):
-    print(f"Adding decorator to {app_py_path}")
+    rich.print(f"Adding decorator to {app_py_path}")
     with open(app_py_path) as f:
         modified_code = modify_code(f)
     with open(app_py_path, "w") as f:

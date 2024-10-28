@@ -4,6 +4,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from soar_asset_mocker import MockType
+from soar_asset_mocker.base.exceptions import VaultExportError
 from soar_asset_mocker.base.register import MocksRegister
 from soar_asset_mocker.connector import soar_libs
 
@@ -64,7 +65,13 @@ def test_export_to_vault(asset_config, action_context, mock_register):
 
     app.save_artifact.assert_called_once_with(
         {
-            "name": f"Asset Mock: {asset_config.app_name}\nApp Run Id:{action_context.app_run_id}\nAsset:{action_context.asset_id} Container:{asset_config.container_id}\nPb Run:{action_context.playbook_run_id}",
+            "name": (
+                f"Asset Mock: {asset_config.app_name}\n"
+                f"App Run Id:{action_context.app_run_id}\n"
+                f"Asset:{action_context.asset_id}\n"
+                f"Container:{asset_config.container_id}\n"
+                f"Pb Run:{action_context.playbook_run_id}"
+            ),
             "container_id": "1",
             "cef": {
                 "vaultId": "123",
@@ -84,7 +91,7 @@ def test_export_to_vault_fails(asset_config, action_context, mock_register):
     app.save_artifact = MagicMock(return_value=[1, 2, 3])
 
     pytest.raises(
-        Exception,
+        VaultExportError,
         lambda: mock_register.export_to_vault(app, action_context, asset_config),
     )
 

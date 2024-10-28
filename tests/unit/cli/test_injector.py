@@ -15,10 +15,9 @@ def test_update_dependencies(tmp_path):
     with open(requirements_path, "w") as f:
         f.writelines(app_requirements)
     injector.update_dependencies(requirements_path)
-    with open(requirements_path, "r") as f:
+    with open(requirements_path) as f:
         requirements_lines = f.readlines()
 
-    print([line for line in requirements_lines if "pack" in line])
     for line in [
         *app_requirements,
         "#Asset Mocker Dependencies\n",

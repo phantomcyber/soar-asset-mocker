@@ -1,7 +1,6 @@
 try:
     import phantom.app as phantom
-    from phantom.vault import Vault as Vault
-    from phantom.vault import vault_info as vault_info
+    from phantom.vault import Vault, vault_info
 
     phantom_available = True  # flag used to prohibit running core functionality without importing module
 except ModuleNotFoundError:

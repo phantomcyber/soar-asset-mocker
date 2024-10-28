@@ -30,19 +30,19 @@ def test_redact_skip_string():
 
 
 @pytest.mark.parametrize(
-    "input,output",
+    ("input_args", "output"),
     [
         ({}, {}),
         ({"password": "redact"}, {"password": REDACTED}),
         ({"passwords": ["abc", "xyz"]}, {"passwords": [REDACTED, REDACTED]}),
         ('{"password":"abcd"}', f'{{"password": "{REDACTED}"}}'),
         (
-            '{"password":"abcd"}'.encode(),
+            b'{"password":"abcd"}',
             f'{{"password": "{REDACTED}"}}'.encode(),
         ),
         ("{ab{", "{ab{"),
         (b"0\xbe", b"0\xbe"),
     ],
 )
-def test_redact_nested(input, output):
-    assert redact_nested(input) == output
+def test_redact_nested(input_args, output):
+    assert redact_nested(input_args) == output
