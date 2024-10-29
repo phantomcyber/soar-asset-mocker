@@ -47,8 +47,7 @@ class AssetMocker:
                 config = self._get_asset_config(app)
                 with self._mock_context(app, config, action), self._record_context(app, config, action):
                     out = handle(app, param)
-                if config.is_active(action):
-                    results = app.get_action_results()
+                if config.is_active(action) and (results := app.get_action_results()):
                     results[-1].update_summary(config.summary(action))
                 return out
             except Exception as e:
