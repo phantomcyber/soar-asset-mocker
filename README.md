@@ -5,8 +5,9 @@ SOAR Asset Mocker is an optional addon for SOAR connectors that allow for record
 1. [Quick start](#Quickstart)
 2. [Connector Installation](#Installation)
 3. [CLI](#CLI)
-4. [Options](#Options)
+4. [Environmental Variables](#Environmental-Variables)
 5. [Content redaction](#content-redaction)
+6. [Contributing](#content-redaction)
 
 # Installation
 
@@ -53,6 +54,19 @@ Now you can run recorded playbooks with mocked external APIs!
 
 # CLI
 
+CLI can be utilised to automate some parts of Asset Mocker workflow.
+For now it supports 2 commands:
+* Inject Asset Mocker into SOAR Connector.
+    > soar-asset-mocker inject ./connector_directory/connector.json
+    
+    It will inject Asset Mocker into connectors code, together with updating dependencies. User is still required to check applied changes and run pre-commit actions.
+
+* Download and merge recording files.
+    > soar-asset-mocker fetch <container_id> myrecordingname.mock
+
+    This command gathers from SOAR container recordings. Then user selects which of them should be merged together into one file. After that user can load that file into SOAR and start mocking with it.
+
+
 # Environmental Variables
 
 * SOAR_AM_MODE - RECORD|MOCK|NONE (default: NONE)
@@ -66,8 +80,6 @@ Now you can run recorded playbooks with mocked external APIs!
 * SOAR_AM_FILE_NAME - A name of recording to be used for mocking. Mocking will fail if file is not found.
 * SOAR_AM_FILE_VAULT_ID - Alternatively to file name, vault id can be used to query for uploaded recording. When file name and vault id are both provided, Asset Mocker will try to find a recording that match both fields.
 * SOAR_AM_FILE_CONTAINER_ID - If there might be two the same file names for recordings, container ID can be specified to make the query more specific.
-
-# Recording file
 
 # Content redaction
 

@@ -291,6 +291,16 @@ files = [
 colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
+name = "cmp-version"
+version = "3.0.0"
+description = "A script and python module to compare version numbers. Use this to compare the version strings of packages, modules, really anything."
+optional = false
+python-versions = "*"
+files = [
+    {file = "cmp_version-3.0.0.tar.gz", hash = "sha256:3a61ff0052f514f9f5d427034b7be8d0eac30d9884aed4bb28f0a14bdaef8f0f"},
+]
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -2186,4 +2196,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "34cd2ddcb5f42568f7d56a5538fa4c0f35e64e7d27a91c0852761ce3dd08ca67"
+content-hash = "339d82c28ab8cf301a621c8d41696194183aad30513aa65fcb10e82f9f754d1b"
