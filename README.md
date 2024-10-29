@@ -34,31 +34,44 @@ You should also see `soar-asset-mocker` in `requirements.txt` file. Now you can 
 
 Connector with Asset Mocker will not look and behave any different than any other connector by default. To enable Asset Mocker you have to add [envronmental variables](#environmental-variables) to your asset.
 
-![Alt text](docs/images//env_vars.png)
+![Alt text](docs/images/env_vars.png)
 
 To start recording actions from playbook runs just set `SOAR_AM_MODE` to `RECORD` and run playbook using your modified asset. 
 
 After execution, recordings will be visible under container artifacts or files.
-![Alt text](image.png)
+![Alt text](docs/images/artifacts.png)
 
 Now we can use CLI to grab and merge all the recordings into one file, input command below and follow the steps.
 
 > soar-asset-mocker fetch <container_id> myrecordingname.mock
 
-After having file generated, 
+After preparing your mock file, you can upload it to any container in SOAR and point at it in asset configuration
+
+![Alt text](docs/images/mocking_settings.png)
+
+Now you can run recorded playbooks with mocked external APIs!
 
 # CLI
 
 # Environmental Variables
 
-* SOAR_AM_MODE = RECORD|MOCK|NONE (default: NONE)
-* SOAR_AM_SCOPE = ALL|VPE (default: VPE)
-* SOAR_AM_CONTAINER_ID
-* SOAR_AM_FILE_NAME
+* SOAR_AM_MODE - RECORD|MOCK|NONE (default: NONE)
+    * RECORD - Asset Mocker will record all HTTP traffic comming through Python sockets of connector process. 
+    * MOCK - Requires a file name or vault id. It will load recording and use it to mock all HTTP traffic. It will throw an error if there is any new unrecorded traffic.
+    * NONE - Asset Mocker is deactivated
+* SOAR_AM_SCOPE - Sets the scope of work for mocker:
+    * ALL - All actions on SOAR will be recorded/mocked
+    * VPE - Only actions executed through VPE will be recorded/mocked (default)
+* SOAR_AM_CONTAINER_ID - It determines where recordings will be stored. By default (no value), recordings will be stored in the same container that the action was executed in.
+* SOAR_AM_FILE_NAME - A name of recording to be used for mocking. Mocking will fail if file is not found.
+* SOAR_AM_FILE_VAULT_ID - Alternatively to file name, vault id can be used to query for uploaded recording. When file name and vault id are both provided, Asset Mocker will try to find a recording that match both fields.
+* SOAR_AM_FILE_CONTAINER_ID - If there might be two the same file names for recordings, container ID can be specified to make the query more specific.
 
 # Recording file
 
 # Content redaction
+
+* By default content of recorded HTTP requests and responses contains redacted information such as tokens, emails, passwords and other secrets. Instead of actual value of that field you'll see `*ASSET_MOCKER_REDACTED*` string.
 
 # Limitations
 
