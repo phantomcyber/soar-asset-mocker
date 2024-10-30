@@ -24,9 +24,11 @@ jobs:
           pip install poetry
           poetry install --with dev
       - name: Gather PR version
+        id: pr-version
         run: |
-          export PULL_REQUEST_VERSION=$(poetry version --short)
-          echo "PULL_REQUEST_VERSION=${PULL_REQUEST_VERSION}"
+          export PR_VERSION=$(poetry version --short)
+          echo "PR_VERSION=${PR_VERSION}"
+          echo "VERSION=${PR_VERSION}" >> $GITHUB_OUTPUT
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,18 +36,23 @@ jobs:
           ref: main
 
       - name: Gather main version
+        id: main-version
         run: |
           export BASE_VERSION=$(poetry version --short)
           echo "BASE_VERSION=${BASE_VERSION}"
+          echo "VERSION=${BASE_VERSION}" >> $GITHUB_OUTPUT
 
       - name: Compare versions
+        env:
+          BASE_VERSION: ${{ steps.main-version.outputs.VERSION }}
+          PR_VERSION: ${{ steps.pr-version.outputs.VERSION }}
         run: |
-          export COMPARE_CODE=$(poetry run cmp-version $PULL_REQUEST_VERSION $BASE_VERSION) && echo "COMPARE_CODE=$COMPARE_CODE"
+          export COMPARE_CODE=$(poetry run cmp-version $PR_VERSION $BASE_VERSION) && echo "COMPARE_CODE=$COMPARE_CODE"
 
           if [ "$COMPARE_CODE" == "1" ]; then
-            echo "Version upgrading to $PULL_REQUEST_VERSION"
+            echo "Version upgrading to $PR_VERSION"
           else
-            echo "🛑 Version $PULL_REQUEST_VERSION not greater than $BASE_VERSION"
+            echo "🛑 Version $PR_VERSION not greater than $BASE_VERSION"
             echo "🚧 Update version through pyproject.toml or 'poetry version' command e.g."
             echo "$ poetry version major"
             echo "$ poetry version minor"
