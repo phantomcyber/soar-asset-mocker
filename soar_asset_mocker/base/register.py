@@ -1,8 +1,8 @@
 import time
 from dataclasses import asdict, dataclass, field
+from importlib.metadata import version as get_version
 
 import msgpack
-import pkg_resources
 from dacite import from_dict
 
 from soar_asset_mocker.base.consts import MockType
@@ -129,5 +129,5 @@ class MocksRegister:
             "playbook_name": action.playbook_name,
             "action_name": action.name,
             "asset_mocker_scope": config.scope.value,
-            "asset_mocker_version": pkg_resources.get_distribution("soar_asset_mocker").version,
+            "asset_mocker_version": get_version("soar_asset_mocker"),
         }
