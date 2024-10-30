@@ -40,7 +40,7 @@ jobs:
 
       - name: Compare versions
         run: |
-          export COMPARE_CODE=$(cmp-version $PULL_REQUEST_VERSION $BASE_VERSION) && echo "COMPARE_CODE=$COMPARE_CODE"
+          export COMPARE_CODE=$(poetry run cmp-version $PULL_REQUEST_VERSION $BASE_VERSION) && echo "COMPARE_CODE=$COMPARE_CODE"
 
           if [ "$COMPARE_CODE" == "1" ]; then
             echo "Version upgrading to $PULL_REQUEST_VERSION"
