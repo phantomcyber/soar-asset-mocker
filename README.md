@@ -7,7 +7,8 @@ SOAR Asset Mocker is an optional addon for SOAR connectors that allow for record
 3. [CLI](#CLI)
 4. [Environmental Variables](#Environmental-Variables)
 5. [Content redaction](#content-redaction)
-6. [Contributing](#content-redaction)
+6. [Limitations](#limitations)
+7. [List of supported connectors](#list-of-supported-connectors)
 
 # Installation
 
@@ -90,6 +91,6 @@ For now it supports 2 commands:
 * Asset Mocker as of now does not make use of state. It means that looped action in which response changes each iteration might not get properly recorded.
 * Asset Mocker cannot record any traffic that happens outside of Python runner. It means that any communication that is done via a subprocess spawned by connector can't be tracked.
 
-# List of SOAR connectors with Asset Mocker
+# List of supported connectors
 
 TBD
