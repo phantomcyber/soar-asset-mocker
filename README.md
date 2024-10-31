@@ -1,5 +1,5 @@
 # SOAR Asset Mocker
-SOAR Asset Mocker is an optional addon for SOAR connectors that allows for recording and replaying connectors transport. As a result, you may expect faster playbook development and lower resource usage.
+The SOAR Asset Mocker is an optional add-on for [SOAR connectors](https://github.com/splunk-soar-connectors) that enables the recording and replaying of connector transport. This functionality can lead to faster playbook development and reduced resource consumption.
 
 # Table of Contents
 1. [Quick start](#Quickstart)
@@ -9,6 +9,7 @@ SOAR Asset Mocker is an optional addon for SOAR connectors that allows for recor
 5. [Content redaction](#content-redaction)
 6. [Limitations](#limitations)
 7. [List of supported connectors](#list-of-supported-connectors)
+8. [Contributing](#contributing)
 
 # Installation
 
@@ -17,7 +18,7 @@ Start by installing Asset Mocker
 > pip install soar-asset-mocker
 
 Now you have access to `soar-asset-mocker cli`, more about it under [cli chapter](#CLI).
-To automatically load Asset Mocker to connector just write the command below, with right access path for connector json file.
+To automatically load Asset Mocker to the connector just write the command below, with the right access path for the connector JSON file.
 > soar-asset-mocker inject ./connector_directory/connector.json
 
 After execution you can check what has been changed in your connector, you can expect a new import in main connector module and a new decorator:
@@ -40,8 +41,8 @@ Connector with Asset Mocker will not look and behave any different than any othe
 
 To start recording actions from playbook runs just set `SOAR_AM_MODE` to `RECORD` and run playbook using your modified asset. 
 
-After execution, recordings will be visible under container artifacts or files.
-![Alt text](docs/images/artifacts.png)
+After execution, recordings will be visible under container files.
+![Alt text](docs/images/files.png)
 
 Now we can use CLI to grab and merge all the recordings into one file, run the command presented below and follow the steps outputed by this command.
 
@@ -70,27 +71,41 @@ For now it supports 2 commands:
 
 # Environmental Variables
 
-* SOAR_AM_MODE - RECORD|MOCK|NONE (default: NONE)
-    * RECORD - Asset Mocker will record all HTTP traffic comming through Python sockets of connector process. 
-    * MOCK - Requires a file name or vault id. It will load recording and use it to mock all HTTP traffic. It will throw an error if there is any new unrecorded traffic.
-    * NONE - Asset Mocker is deactivated
-* SOAR_AM_SCOPE - Sets the scope of work for mocker:
-    * ALL - All actions on SOAR will be recorded/mocked
-    * VPE - Only actions executed through VPE will be recorded/mocked (default)
-* SOAR_AM_CONTAINER_ID - It determines where recordings will be stored. By default (no value), recordings will be stored in the same container that the action was executed in.
-* SOAR_AM_FILE_NAME - A name of recording to be used for mocking. Mocking will fail if file is not found.
-* SOAR_AM_FILE_VAULT_ID - Alternatively to file name, vault id can be used to query for uploaded recording. When file name and vault id are both provided, Asset Mocker will try to find a recording that match both fields.
-* SOAR_AM_FILE_CONTAINER_ID - If there might be two the same file names for recordings, container ID can be specified to make the query more specific.
+* **SOAR_AM_MODE** - RECORD|MOCK|NONE (default: NONE)
+    * **RECORD** - Asset Mocker will record all HTTP traffic comming through Python sockets of connector process. 
+    * **MOCK** - Requires a file name or vault id. It will load recording and use it to mock all HTTP traffic. It will throw an error if there is any new unrecorded traffic.
+    * **NONE** - Asset Mocker is deactivated
+* **SOAR_AM_SCOPE** - Sets the scope of work for mocker:
+    * **ALL** - All actions on SOAR will be recorded/mocked
+    * **VPE** - Only actions executed through VPE will be recorded/mocked (default)
+* **SOAR_AM_CONTAINER_ID** - It determines where recordings will be stored. By default (no value), recordings will be stored in the same container that the action was executed in.
+* **SOAR_AM_FILE_NAME** - A name of recording to be used for mocking. Mocking will fail if file is not found.
+* **SOAR_AM_FILE_VAULT_ID** - Alternatively to file name, vault id can be used to query for uploaded recording. When file name and vault id are both provided, Asset Mocker will try to find a recording that match both fields.
+* **SOAR_AM_FILE_CONTAINER_ID** - If there might be two the same file names for recordings, container ID can be specified to make the query more specific.
 
 # Content redaction
 
-* By default content of recorded HTTP requests and responses contains redacted information such as tokens, emails, passwords and other secrets. Instead of actual value of that field you'll see `*ASSET_MOCKER_REDACTED*` string.
+* By default, recorded HTTP requests and responses contain redacted information such as tokens, emails, passwords, and other secrets. Instead of the actual value of that field, you'll see the `*ASSET_MOCKER_REDACTED*` string.
 
 # Limitations
 
-* Asset Mocker as of now does not make use of state. It means that looped action in which response changes each iteration might not get properly recorded.
-* Asset Mocker cannot record any traffic that happens outside of Python runner. It means that any communication that is done via a subprocess spawned by connector can't be tracked.
+* Asset Mocker does not currently use the connector`s state. This means that a looped action in which the response changes each iteration might not get properly recorded.
+* Asset Mocker cannot record traffic that happens outside of the Python runner. This means that communication done via a subprocess spawned by the connector can't be tracked.
 
 # List of supported connectors
 
 TBD
+
+# Contributing
+
+If you've found an improvement and wish to implement it, the steps to do so are as follows.
+
+1. Fork the repo.
+2. Install [pre-commit](https://pre-commit.com/#install) if it is not installed and then run `pre-commit install` while inside the Asset Mocker repo. Note: This step is not required, but strongly recommended! It will allow you to catch issues before even pushing any code.
+3. Install [poetry](https://python-poetry.org/) and run `poetry install` while inside the repository.
+4. Create a branch.
+5. Implement your changes.
+6. Write at least unit tests if changes are not covered by current test suite.
+7. Run tests locally - `poetry run pytest .`
+8. Test Asset Mocker with any connector, for example [Censys Connector](https://github.com/splunk-soar-connectors/censys) can be used. Use `poetry shell` to access cli from your repo and follow [quick start](#Quickstart) to install and work with Asset Mocker.
+9. Perform a pull request to the next branch of the app repo.
