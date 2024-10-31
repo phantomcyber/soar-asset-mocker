@@ -1,5 +1,5 @@
 # SOAR Asset Mocker
-SOAR Asset Mocker is an optional addon for SOAR connectors that allow for recording and replaying connectors transport. As a result you may expect faster playbook development and lower resource usage.
+SOAR Asset Mocker is an optional addon for SOAR connectors that allows for recording and replaying connectors transport. As a result, you may expect faster playbook development and lower resource usage.
 
 # Table of Contents
 1. [Quick start](#Quickstart)
