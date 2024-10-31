@@ -20,7 +20,7 @@ Now you have access to `soar-asset-mocker cli`, more about it under [cli chapter
 To automatically load Asset Mocker to connector just write the command below, with right access path for connector json file.
 > soar-asset-mocker inject ./connector_directory/connector.json
 
-After execution you can check what has changed in your connector, you can expect a new import in main connector module and a new decorator:
+After execution you can check what has been changed in your connector, you can expect a new import in main connector module and a new decorator:
 ```
 from soar_asset_mocker import AssetMocker, MockType
 ...
