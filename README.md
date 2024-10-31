@@ -51,7 +51,7 @@ After preparing your mock file, you can upload it to any container in SOAR and p
 
 ![Alt text](docs/images/mocking_settings.png)
 
-Now you can run recorded playbooks with mocked external APIs!
+Now, with recorded connector's transport, you can run playbooks with mocked external APIs!
 
 # CLI
 
