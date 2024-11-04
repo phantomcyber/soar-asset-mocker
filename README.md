@@ -108,4 +108,4 @@ If you've found an improvement and wish to implement it, the steps to do so are 
 6. Write at least unit tests if changes are not covered by current test suite.
 7. Run tests locally - `poetry run pytest .`
 8. Test Asset Mocker with any connector, for example [Censys Connector](https://github.com/splunk-soar-connectors/censys) can be used. Use `poetry shell` to access cli from your repo and follow [quick start](#Quickstart) to install and work with Asset Mocker.
-9. Perform a pull request to the next branch of the app repo.
+9. Create a pull request to the next branch of the Asset Mocker's repo.
