@@ -13,7 +13,7 @@ The SOAR Asset Mocker is an optional add-on for [SOAR connectors](https://github
 
 # Installation
 
-If you are developing SOAR connector, you can add Asset Mocker to it.
+If you are developing a SOAR connector, you can add Asset Mocker to it.
 Start by installing Asset Mocker
 > pip install soar-asset-mocker
 
