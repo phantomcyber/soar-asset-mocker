@@ -80,14 +80,15 @@ class AssetConfig:
     @classmethod
     def _from_env(cls, app):
         config = app.get_config()
-        mode = AssetMockerMode(EnvVariables().MODE)
+        envs = EnvVariables()
+        mode = AssetMockerMode(envs.MODE)
         # Load only for mock mode
         mock_file = (
             cls._mock_file_from_artifact(
                 app,
-                vault_id=EnvVariables().FILE_VAULT_ID,
-                container_id=cls._parse_container_id(app, EnvVariables().FILE_CONTAINER_ID),
-                file_name=EnvVariables().FILE_NAME,
+                vault_id=envs.FILE_VAULT_ID,
+                container_id=cls._parse_container_id(app, envs.FILE_CONTAINER_ID),
+                file_name=envs.FILE_NAME,
             )
             if mode is AssetMockerMode.MOCK
             else ""
@@ -97,8 +98,8 @@ class AssetConfig:
             mock_types=set(),
             mock_file=mock_file,
             mode=mode,
-            scope=AssetMockerScope(EnvVariables().SCOPE),
-            container_id=EnvVariables().CONTAINER_ID or app.get_container_id(),
+            scope=AssetMockerScope(envs.SCOPE),
+            container_id=envs.CONTAINER_ID or app.get_container_id(),
         )
 
     @classmethod

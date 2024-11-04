@@ -1,5 +1,5 @@
 # SOAR Asset Mocker
-The SOAR Asset Mocker is an optional add-on for [SOAR connectors](https://github.com/splunk-soar-connectors) that enables the recording and replaying of connector transport. This functionality can lead to faster playbook development and reduced resource consumption.
+The SOAR Asset Mocker is an optional add-on for [SOAR connectors](https://github.com/splunk-soar-connectors) that enables the recording and replaying of connector network traffic. This functionality can lead to faster playbook development and reduced resource consumption.
 
 # Table of Contents
 1. [Quick start](#Quickstart)
@@ -52,7 +52,7 @@ After preparing your mock file, you can upload it to any container in SOAR and p
 
 ![Alt text](docs/images/mocking_settings.png)
 
-Now, with recorded connector's transport, you can run playbooks with mocked external APIs!
+Now, with recorded connector's network traffic, you can run playbooks with mocked external APIs!
 
 # CLI
 
