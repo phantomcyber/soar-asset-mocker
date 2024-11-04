@@ -53,12 +53,8 @@ jobs:
             echo "🟢 Version upgrading to $PR_VERSION"
           else
             echo "🛑 Version $PR_VERSION not greater than $BASE_VERSION"
-            echo "🚧 Update version through pyproject.toml or 'poetry version' command e.g."
-            echo "$ poetry version major"
-            echo "$ poetry version minor"
-            echo "$ poetry version patch"
-            echo "$ poetry version preminor"
-            echo "For more examples: https://python-poetry.org/docs/cli/#version"
+            echo "🚧 Update version through pyproject.toml or 'poetry version' command"
+            echo "Cf. https://semver.org/ and https://python-poetry.org/docs/cli/#version"
             exit 1
           fi
   Lint:
