@@ -61,7 +61,7 @@ For now it supports 2 commands:
 * Inject Asset Mocker into SOAR Connector.
     > soar-asset-mocker inject ./connector_directory/connector.json
     
-    It will inject Asset Mocker into connectors code, together with updating dependencies. User is still required to check applied changes and run pre-commit actions.
+    It will inject Asset Mocker into connector's code. User is still required to check applied changes and run pre-commit actions.
 
 * Download and merge recording files.
     > soar-asset-mocker fetch <container_id> myrecordingname.mock
