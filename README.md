@@ -66,7 +66,7 @@ For now it supports 2 commands:
 * Download and merge recording files.
     > soar-asset-mocker fetch <container_id> myrecordingname.mock
 
-    This command gathers recordings from SOAR container. Then, user selects which of them should be merged together into one file. After that, user can load that file into SOAR and start mocking with it.
+    This command gathers recordings from a SOAR container. Then, the user selects which ones should be merged together into one file. After that, the user can load that file into SOAR and start mocking with it.
 
 
 # Environmental Variables
