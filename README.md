@@ -73,7 +73,7 @@ For now it supports 2 commands:
 
 * **SOAR_AM_MODE** - RECORD|MOCK|NONE (default: NONE)
     * **RECORD** - Asset Mocker will record all HTTP traffic comming through Python sockets of connector process. 
-    * **MOCK** - Requires a file name or vault id. It will load recording and use it to mock all HTTP traffic. It will throw an error if there is any new unrecorded traffic.
+    * **MOCK** - Requires a file name or vault id. It will load the recording and use it to mock all HTTP traffic. It will throw an error if there is any new unrecorded traffic.
     * **NONE** - Asset Mocker is deactivated
 * **SOAR_AM_SCOPE** - Sets the scope of work for mocker:
     * **ALL** - All actions on SOAR will be recorded/mocked
