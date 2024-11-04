@@ -18,7 +18,7 @@ Start by installing Asset Mocker
 > pip install soar-asset-mocker
 
 Now you have access to `soar-asset-mocker cli`, more about it under [cli chapter](#CLI).
-To automatically load Asset Mocker to the connector just write the command below, with the right access path for the connector JSON file.
+To inject Asset Mocker to the connector just write the command below, with the right path to the connector's JSON file.
 > soar-asset-mocker inject ./connector_directory/connector.json
 
 After execution you can check what has been changed in your connector, you can expect a new import in main connector module and a new decorator:
