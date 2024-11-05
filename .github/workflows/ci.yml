@@ -50,6 +50,10 @@ jobs:
             echo "Cf. https://semver.org/ and https://python-poetry.org/docs/cli/#version"
             exit 1
           fi
+
+      - name: Checkout code # Checkouting back to current branch to make sure that the post actions are up to date with branch changes
+        uses: actions/checkout@v4
+
   PrecommitHooks:
     runs-on: ubuntu-latest
     steps:
