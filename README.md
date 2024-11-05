@@ -14,7 +14,10 @@ The SOAR Asset Mocker is an add-on for [SOAR connectors](https://github.com/splu
 # Installation
 
 If you are developing a SOAR connector ([see contributing guide]( https://github.com/splunk-soar-connectors/.github/blob/main/.github/CONTRIBUTING.md )), you can add Asset Mocker to it.
-In your local environment, in Connector`s directory start installing Asset Mocker on your machine.
+In your local environment, in Connector`s directory start by installing Asset Mocker on your machine. Then you'll be able to inject it into your Connector and use it in SOAR.
+
+Installing Asset Mocker as a tool, locally.
+
 > pip install soar-asset-mocker
 
 Now you have access to `soar-asset-mocker cli`, more about it under [cli chapter](#CLI).
