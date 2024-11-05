@@ -38,7 +38,7 @@ You should also see `soar-asset-mocker` in `requirements.txt` file. Now you can 
 
 # Quickstart
 
-By default a connector with Asset Mocker will not look or behave any different than any other connector. To enable Asset Mocker you have to add [envronmental variables](#environmental-variables) to your asset.
+By default a connector with Asset Mocker will not look or behave any different than any other connector. To enable Asset Mocker you have to add [environmental variables](#environmental-variables) to your asset.
 
 ![Alt text](docs/images/env_vars.png)
 
