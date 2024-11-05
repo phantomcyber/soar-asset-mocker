@@ -10,19 +10,9 @@ jobs:
   Version:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Run Base Steps
+        uses: ./.github/actions/base-action
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install poetry
-          poetry install --with dev
       - name: Gather PR version
         id: pr-version
         run: |
@@ -60,19 +50,8 @@ jobs:
   PrecommitHooks:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install poetry
-          poetry install --with dev
+      - name: Run Base Steps
+        uses: ./.github/actions/base-action
 
       - name: Run pre-commit
         run: |
@@ -80,19 +59,8 @@ jobs:
   Tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install poetry
-          poetry install --with dev
+      - name: Run Base Steps
+        uses: ./.github/actions/base-action
 
       - name: Run tests with coverage
         run: |
@@ -113,10 +81,8 @@ jobs:
       runs-on: ubuntu-latest
 
       steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-python@v5
-          with:
-            python-version: "3.9"
+        - name: Run Base Steps
+          uses: ./.github/actions/base-action
 
         - uses: actions/download-artifact@v4
           with:
