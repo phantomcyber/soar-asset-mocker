@@ -57,7 +57,7 @@ jobs:
             echo "Cf. https://semver.org/ and https://python-poetry.org/docs/cli/#version"
             exit 1
           fi
-  Lint:
+  PrecommitHooks:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
