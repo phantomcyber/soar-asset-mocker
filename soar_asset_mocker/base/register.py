@@ -1,11 +1,10 @@
 import time
 from dataclasses import asdict, dataclass, field
-from importlib.metadata import version as get_version
 
 import msgpack
 from dacite import from_dict
 
-from soar_asset_mocker.base.consts import MockType
+from soar_asset_mocker.base.consts import ASSET_MOCKER_VERSION, MockType
 from soar_asset_mocker.base.exceptions import VaultExportError
 from soar_asset_mocker.base.serializers import decode_unserializable_types, encode_unserializable_types
 from soar_asset_mocker.connector.action_context import ActionContext
@@ -129,5 +128,5 @@ class MocksRegister:
             "playbook_name": action.playbook_name,
             "action_name": action.name,
             "asset_mocker_scope": config.scope.value,
-            "asset_mocker_version": get_version("soar_asset_mocker"),
+            "asset_mocker_version": ASSET_MOCKER_VERSION,
         }
