@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from soar_asset_mocker.base.consts import AssetMockerMode, AssetMockerScope, EnvVariables, MockType
+from soar_asset_mocker.base.consts import AssetMockerMode, AssetMockerScope, MockType
+from soar_asset_mocker.base.settings import EnvVariables
 from soar_asset_mocker.connector.soar_libs import vault_info
 
 from .action_context import ActionContext
