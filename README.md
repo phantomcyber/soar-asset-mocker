@@ -82,8 +82,8 @@ For now it supports 2 commands:
     * **ALL** - All actions on SOAR will be recorded/mocked
     * **VPE** - Only actions executed through VPE will be recorded/mocked (default)
 * **SOAR_AM_CONTAINER_ID** - It determines where recordings will be stored. By default (no value), recordings will be stored in the same container that the action was executed in.
-* **SOAR_AM_FILE_NAME** - A name of recording to be used for mocking. Mocking will fail if file is not found. If there are multiple files with the same name,  
-* **SOAR_AM_FILE_VAULT_ID** - Alternatively to file name, vault id can be used to query for an uploaded recording. When file name and vault id are both provided, Asset Mocker will try to find a recording that matches both fields.
+* **SOAR_AM_FILE_NAME** - A name of recording to be used for mocking. Mocking will fail if file is not found. If there are multiple files with the same name, the oldest file will be used. To prevent such behavior it is recommended to provide **SOAR_AM_FILE_VAULT_ID** described below.  
+* **SOAR_AM_FILE_VAULT_ID** - Beside file name, vault id can be used to query for an uploaded recording. When file name and vault id are both provided, Asset Mocker will try to find a recording that matches both fields.
 * **SOAR_AM_FILE_CONTAINER_ID** - As recording files can share a name, container ID can be specified to make the query more specific.
 
 # Content redaction
