@@ -1,8 +1,8 @@
-import os
 from dataclasses import dataclass
 from typing import Optional
 
 from soar_asset_mocker.base.consts import AssetMockerMode, AssetMockerScope, MockType
+from soar_asset_mocker.base.settings import EnvVariables
 from soar_asset_mocker.connector.soar_libs import vault_info
 
 from .action_context import ActionContext
@@ -81,14 +81,15 @@ class AssetConfig:
     @classmethod
     def _from_env(cls, app):
         config = app.get_config()
-        mode = AssetMockerMode(os.getenv("SOAR_AM_MODE", "NONE"))
+        envs = EnvVariables()
+        mode = AssetMockerMode(envs.MODE)
         # Load only for mock mode
         mock_file = (
             cls._mock_file_from_artifact(
                 app,
-                vault_id=os.getenv("SOAR_AM_FILE_VAULT_ID", ""),
-                container_id=cls._parse_container_id(app, os.getenv("SOAR_AM_FILE_CONTAINER_ID", "")),
-                file_name=os.getenv("SOAR_AM_FILE_NAME", ""),
+                vault_id=envs.FILE_VAULT_ID,
+                container_id=cls._parse_container_id(app, envs.FILE_CONTAINER_ID),
+                file_name=envs.FILE_NAME,
             )
             if mode is AssetMockerMode.MOCK
             else ""
@@ -98,8 +99,8 @@ class AssetConfig:
             mock_types=set(),
             mock_file=mock_file,
             mode=mode,
-            scope=AssetMockerScope(os.getenv("SOAR_AM_SCOPE", "VPE")),
-            container_id=os.getenv("SOAR_AM_CONTAINER_ID", app.get_container_id()),
+            scope=AssetMockerScope(envs.SCOPE),
+            container_id=envs.CONTAINER_ID or app.get_container_id(),
         )
 
     @classmethod

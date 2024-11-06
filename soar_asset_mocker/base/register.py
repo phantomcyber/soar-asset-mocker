@@ -4,7 +4,7 @@ from dataclasses import asdict, dataclass, field
 import msgpack
 from dacite import from_dict
 
-from soar_asset_mocker.base.consts import MockType
+from soar_asset_mocker.base.consts import ASSET_MOCKER_VERSION, MockType
 from soar_asset_mocker.base.exceptions import VaultExportError
 from soar_asset_mocker.base.serializers import decode_unserializable_types, encode_unserializable_types
 from soar_asset_mocker.connector.action_context import ActionContext
@@ -127,6 +127,6 @@ class MocksRegister:
             "app_name": config.app_name,
             "playbook_name": action.playbook_name,
             "action_name": action.name,
-            "scope": config.scope.value,
-            "asset_mocker_version": "0.1.1",  # TODO sync with versioning
+            "asset_mocker_scope": config.scope.value,
+            "asset_mocker_version": ASSET_MOCKER_VERSION,
         }
