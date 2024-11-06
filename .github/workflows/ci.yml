@@ -54,7 +54,8 @@ jobs:
       - name: Checkout code # Checkouting back to current branch to make sure that the post actions are up to date with branch changes
         uses: actions/checkout@v4
 
-  PrecommitHooks:
+  Precommit:
+    name: Run pre-commit hooks
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
