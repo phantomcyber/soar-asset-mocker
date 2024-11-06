@@ -47,7 +47,7 @@ To start recording actions just set `SOAR_AM_MODE` to `RECORD` and run playbook 
 After execution, recordings will be visible under container files.
 ![Alt text](docs/images/files.png)
 
-Now we can use CLI to grab and merge all the recordings into one file, run the command presented below and follow the steps outputed by this command.
+Now we can use CLI to grab and merge all the recordings into one file, run the command presented below and follow the steps output by this command.
 
 > soar-asset-mocker fetch <container_id> myrecordingname.mock
 
