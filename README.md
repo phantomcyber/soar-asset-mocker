@@ -88,7 +88,7 @@ For now it supports 2 commands:
 
 # Content redaction
 
-* By default, recorded HTTP requests and responses contain redacted information such as tokens, emails, passwords, and other secrets. Instead of the actual value of that field, you'll see the `*ASSET_MOCKER_REDACTED*` string.
+* Raw HTTP requests and responses may contain sensitive information such as tokens, emails, passwords, and other secrets. Instead of the actual value of that field, you'll see the `*ASSET_MOCKER_REDACTED*` string.
 
 # Limitations
 
