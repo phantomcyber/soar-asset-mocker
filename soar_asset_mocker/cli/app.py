@@ -2,7 +2,10 @@ import os
 from pathlib import Path
 from typing import Annotated
 
+import rich
 import typer
+
+from soar_asset_mocker.base.consts import ASSET_MOCKER_VERSION
 
 from .fetch import RecordingFetcher
 from .injector import inject_app
@@ -35,11 +38,8 @@ def inject(app_json_path: Path):  # pragma: no cover
 
 
 @cli_app.command()
-def unpack(): ...
-
-
-@cli_app.command()
-def pack(): ...
+def version():
+    rich.print(f"SOAR Asset Mocker version: {ASSET_MOCKER_VERSION}")
 
 
 if __name__ == "__main__":

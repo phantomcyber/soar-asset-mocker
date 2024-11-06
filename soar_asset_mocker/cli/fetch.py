@@ -126,7 +126,7 @@ class RecordingFetcher:
         playbooks = defaultdict(lambda: [])
         for a in attachments:
             metadata = a["_pretty_metadata"]
-            if "scope" not in metadata:  # TODO Change to Asset Mocker version
+            if "asset_mocker_version" not in metadata:
                 continue
             pb_run_id = metadata.get("playbook_run_id")
             if pb_run_id:

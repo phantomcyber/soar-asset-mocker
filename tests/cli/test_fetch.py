@@ -23,7 +23,8 @@ def test_fetch(tmp_path, httpserver):
                     "vault_document": vault_doc,
                     "_pretty_metadata": {
                         "action_run_id": "3",
-                        "scope": "VPE",
+                        "asset_mocker_scope": "VPE",
+                        "asset_mocker_version": "0.1.0",
                         "playbook_name": "pb_1",
                         "playbook_run_id": "1",
                         "app_name": "abc",
@@ -35,7 +36,8 @@ def test_fetch(tmp_path, httpserver):
                     "vault_document": vault_doc,
                     "_pretty_metadata": {
                         "action_run_id": "1",
-                        "scope": "VPE",
+                        "asset_mocker_scope": "VPE",
+                        "asset_mocker_version": "0.1.0",
                         "app_name": "abc",
                     },
                 },
@@ -45,7 +47,8 @@ def test_fetch(tmp_path, httpserver):
                     "vault_document": vault_doc,
                     "_pretty_metadata": {
                         "action_run_id": "2",
-                        "scope": "VPE",
+                        "asset_mocker_scope": "VPE",
+                        "asset_mocker_version": "0.1.0",
                         "app_name": "abc",
                     },
                 },
