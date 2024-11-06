@@ -104,7 +104,7 @@ TBD
 If you've found an improvement and wish to implement it, the steps to do so are as follows.
 
 1. Fork the repo.
-2. Install [pre-commit](https://pre-commit.com/#install) if it is not installed and then run `pre-commit install` while inside the Asset Mocker repo. Note: This step is not required, but strongly recommended! It will allow you to catch issues before even pushing any code.
+2. Install [pre-commit](https://pre-commit.com/#install), if it is not installed, and run `pre-commit install` while inside the Asset Mocker repo. Note: This step is not required, but strongly recommended! It will allow you to catch issues before even pushing any code.
 3. Install [poetry](https://python-poetry.org/) and run `poetry install` while inside the repository.
 4. Create a branch.
 5. Implement your changes.
