@@ -18,11 +18,11 @@ In your local environment, in Connector`s directory start by installing Asset Mo
 
 Installing Asset Mocker as a tool, locally.
 
-> pip install soar-asset-mocker
+> pip install soar_asset_mocker
 
-Now you have access to `soar-asset-mocker cli`, more about it under [cli chapter](#CLI).
+Now you have access to `soar_asset_mocker cli`, more about it under [cli chapter](#CLI).
 To inject Asset Mocker to the connector just write the command below, with the right path to the connector's JSON file.
-> soar-asset-mocker inject ./connector_directory/connector.json
+> soar_asset_mocker inject ./connector_directory/connector.json
 
 After execution you can check what has been changed in your connector, you can expect a new import in main connector module and a new decorator:
 ```
@@ -34,7 +34,7 @@ class ExampleConnector(BaseConnector):
    def handle_action(self, param):
     ...
 ```
-You should also see `soar-asset-mocker` in `requirements.txt` file. Now you can commit your changes, recompile your app and load it into SOAR to enhance playbook development experience.
+You should also see `soar_asset_mocker` in `requirements.txt` file. Now you can commit your changes, recompile your app and load it into SOAR to enhance playbook development experience.
 
 # Quickstart
 
@@ -49,7 +49,7 @@ After execution, recordings will be visible under container files.
 
 Now we can use CLI to grab and merge all the recordings into one file, run the command presented below and follow the steps output by this command.
 
-> soar-asset-mocker fetch <container_id> myrecordingname.mock
+> soar_asset_mocker fetch <container_id> myrecordingname.mock
 
 After preparing your mock file, you can upload it to any container in SOAR and point at it in asset configuration
 
@@ -62,12 +62,12 @@ Now, with recorded connector's network traffic, you can run playbooks with mocke
 CLI can be utilised to automate some parts of Asset Mocker workflow.
 For now it supports 2 commands:
 * Inject Asset Mocker into SOAR Connector.
-    > soar-asset-mocker inject ./connector_directory/connector.json
+    > soar_asset_mocker inject ./connector_directory/connector.json
     
     It will inject Asset Mocker into connector's code. User is still required to check applied changes and run pre-commit actions.
 
 * Download and merge recording files.
-    > soar-asset-mocker fetch <container_id> myrecordingname.mock
+    > soar_asset_mocker fetch <container_id> myrecordingname.mock
 
     This command gathers recordings from a SOAR container. Then, the user selects which ones should be merged together into one file. After that, the user can load that file into SOAR and start mocking with it.
 
